@@ -1,0 +1,14 @@
+.weight_range_box {
+border: 1px solid black;
+padding-left: 10px;
+
+margin-right:5px;	
+}
+.close_button {
+	background:red;
+	pointer:cursor;
+	color:white;
+	padding:2px;
+	font-weight:bold;
+	margin-left:5px;
+}

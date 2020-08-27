@@ -1,0 +1,214 @@
+  <!-- Static Table Start -->
+  <div class="data-table-area mg-b-15">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="sparkline13-list">
+                    <div class="sparkline13-hd">
+                        <div class="main-sparkline13-hd">
+                        <div class="col-md-2"><h1>Category Table(<span id="show_tablecount"><?= count($result);?></span>)<input type="hidden" id="tablecount" value="<?= count($result);?>"></h1></div>
+                            <div class="col-md-6"><center><h1><span id="responsemsg" style="color:green;" >
+                            <?php if(isset($_SESSION['responsemsg'])){echo $_SESSION['responsemsg'];unset($_SESSION['responsemsg']);}?>
+                            </span></center></h1></div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>                         
+                    
+        <div class="add-product">
+        <a class="Primary mg-b-10" href="#" data-toggle="modal" data-target="#addmodal">Add Category</a>
+        </div>
+        <div class="sparkline13-graph">
+            <div class="datatable-dashv1-list custom-datatable-overright">
+                <div id="toolbar">
+                    <select class="form-control dt-tb">
+                        <option value="">Export Basic</option>
+                        <option value="all">Export All</option>
+                        <option value="selected">Export Selected</option>
+                    </select>
+                </div>
+                <table id="table" data-toggle="table" data-pagination="true" data-search="true" data-show-columns="true" data-show-pagination-switch="true" data-show-refresh="true" data-key-events="true" data-show-toggle="true" data-resizable="true" data-cookie="true"
+                    data-cookie-id-table="saveId" data-show-export="true" data-click-to-select="true" data-toolbar="#toolbar">
+                    <thead>
+                        <tr>
+                            <th data-field="state" data-checkbox="true"></th>
+                            <th>Sr No</th>
+                            <th>Name</th> 
+                            <th>Status</th>                                               
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php if(isset($result)){
+                        $count = 1;
+                        foreach ($result as $value) {
+                        
+                    ?>
+                        <tr id="delete<?= $value['c_id']; ?>">
+                            <td></td>
+                            <td><?=  $count ?></td>
+                            <td><p class="<?= 'rowcategoryname'.$value['c_id'];?>"> <?=  $value['c_name']; ?></p><input type="hidden" id="<?= 'rowcategory'.$value['c_id'];?>" value="<?= $value['c_name'];?>"></td>
+                            <td> <?= $value['status']==1?'Active':'Deactive'; ?></td>
+                            <td>
+                            <a class="Primary mg-b-10" href="#" data-toggle="modal" data-target="#editmodal" onclick="editcategorygetname(<?= $value['c_id'];?>);"><button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
+                            <!-- <a onclick="deleterow(<?= $value['c_id']; ?>);"><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true" ></i></button></a> -->
+                        </td>
+                        </tr>
+                        <?php   $count++;    }}      ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+        <div id="addmodal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header header-color-modal bg-color-1">
+                        <h4 class="modal-title">Add Category</h4>
+                        <div class="modal-close-area modal-close-df">
+                            <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                        </div>
+                    </div>
+                    <form class="form-horizontal style-form" method="POST" action="<?= site_url();?>/view_category" enctype="multipart/form-data">
+                    <div class="modal-body">
+                    <div class="form-group-inner">
+                    <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                <label class="login2 pull-right pull-right-pro" for="c_name">Category Name</label>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" id="c_name" name="c_name" class="form-control" placeholder="Enter Category Name" />
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <div class="login-horizental cancel-wp pull-right form-bc-ele">
+                        <button class="btn btn-sm btn-primary login-submit-cs" type="submit" name="submit">Submit</button>
+                        <button class="btn btn-white" data-dismiss="modal" type="button">Cancel</button>                                         
+                    </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div id="editmodal" class="modal modal-edu-general default-popup-PrimaryModal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header header-color-modal bg-color-1">
+                        <h4 class="modal-title">Edit Category</h4>
+                        <div class="modal-close-area modal-close-df">
+                            <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                        </div>
+                    </div>
+                    <form class="form-horizontal style-form" method="POST" action="<?= site_url();?>/view_category" enctype="multipart/form-data">
+                    <div class="modal-body">
+                    <div class="form-group-inner">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                <label class="login2 pull-right pull-right-pro" for="editcategory_name">Category Name</label>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                <input type="text" id="editcategory_name" name="c_name" class="form-control" placeholder="Enter Category Name" />
+                                <input type="hidden" id="editcategory_id" name="" class="form-control" placeholder="" />
+                            </div>
+           
+
+                        </div>
+                        <div class = "row">
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                <label class="login2 pull-right pull-right-pro" for="editcategory_name">Zone</label>
+                            </div>
+                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                <select id="fk_zone_id" name="fk_zone_id" class="form-control validate[required]"  >
+                                <option value="">Select Zone</option>
+                                <?php foreach($zone as $zonerow){ ?>
+                                <option value="<?= $zonerow['z_id']; ?>"><?= $zonerow['z_name']; ?></option>
+                                <?php } ?>                
+                                </select>
+                            </div>
+
+                        </div>    
+                    </div>
+                    </div>
+                    <div class="modal-footer">
+                    <div class="login-horizental cancel-wp pull-right form-bc-ele">
+                        <button class="btn btn-sm btn-primary login-submit-cs" data-dismiss="modal" type="button" name="update" onclick="edit_table(this.value);">Update</button>
+                        <button class="btn btn-white" data-dismiss="modal" type="button">Cancel</button>                                         
+                    </div>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+<script>
+    function deleterow(id){
+        // alert(id);
+        var deleteid = 'c_id';
+        var tdeletecolumn = 'c_delete';     
+        var tablename = 'category';      
+        $.ajax({
+            type: "post",
+            url: "<?php echo site_url('/deleterow/') ?>",
+            data: {id:id,deleteid:deleteid,tablename:tablename,tdeletecolumn:tdeletecolumn},
+            datatype: "text",
+            success: function(data){                
+                if(data == 'success'){                    
+                   $("#responsemsg").addClass("hide_respons");
+                    $('#delete'+id).hide();
+                    $('#responsemsg').show();
+                    $('#responsemsg').html('Deleted Sucessfully.');
+                }else{                    
+                    $("#responsemsg").addClass("hide_respons");
+                    $('#responsemsg').show();
+                    $('#responsemsg').html('Error!');
+                }            
+            }
+        });
+    }
+
+    function editcategorygetname(id){
+        $('#editcategory_name').val($('#rowcategory'+id).val());
+        $('#editcategory_id').val(id);
+    }
+
+    function edit_table(){
+
+        
+        var id = $('#editcategory_id').val();
+        var editid = 'c_id';         
+        var tablename = 'category';  
+        var c_name = $('#editcategory_name').val();
+        //alert(id);
+        $.ajax({
+            type: "post",
+            url: "<?php echo site_url('/edit_table/') ?>",
+            data: {id:id,editid:editid,tablename:tablename,c_name:c_name},
+            datatype: "text",
+            success: function(data){                
+                if(data == 'success'){     
+                    $("#tablecount").val($("#tablecount").val() - 1);
+                    $("#show_tablecount").html($("#tablecount").val());
+                    $('#rowcategory'+id).val(c_name);    
+                    $('.rowcategoryname'+id).text(c_name);               
+                   $("#responsemsg").addClass("hide_respons");                   
+                    $('#responsemsg').show();
+                    $('#responsemsg').html('Updated Sucessfully.');
+
+                }else{                    
+                    $("#responsemsg").addClass("hide_respons");
+                    $('#responsemsg').show();
+                    $('#responsemsg').html('Error!');
+                }            
+            }
+        });
+    }
+</script>
+
+           
