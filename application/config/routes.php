@@ -119,7 +119,11 @@ $route['view_orders_dperson'] = "master/MasterCtrl/view_orders_dperson";
 $route['order_status_by_dperson'] = "master/MasterCtrl/order_status_by_dperson";
 $route['edit_order/:any'] = "master/MasterCtrl/edit_order";
 $route['add_order'] = "master/MasterCtrl/add_order";
+$route['cancel_order/:any'] = "master/MasterCtrl/cancel_order";
+$route['delete_order_item/:any'] = "master/MasterCtrl/delete_order_item";
+$route['order_print_view/:any'] = "master/MasterCtrl/order_print_view";
 $route['view_pushnotification'] = "master/MasterCtrl/view_pushnotification";
+$route['change_status'] = "master/MasterCtrl/change_status";
 
 ////////////// STRAT API ROUTES   ///////////////////////////
 $route['api_login'] = "master/ApiCtrl/api_login";

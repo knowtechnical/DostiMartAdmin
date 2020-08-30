@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 |
 */
 //$config['base_url'] = 'http://www.bhartiyaacademy.com/onlinesale/';
-$config['base_url'] = 'http://192.168.43.139/pmartweb/';
+$config['base_url'] = 'http://192.168.43.139/DostiMartAdmin/';
 
 /*
 |--------------------------------------------------------------------------

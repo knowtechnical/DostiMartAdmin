@@ -42,14 +42,16 @@
             <thead>
                 <tr>
                     <th data-field="state" data-checkbox="true"></th>
-                    <th>Sr No</th>
+                    <th data-field="id">Sr No</th>
+                    <th >Order Date</th>
                     <th>Order Id</th>
                     <th>User Name</th>
+                    <th>Mobile</th>
                     <th>Amount</th>
-                    <th>Total Items</th>
-                    <th>Order Status</th>
-                    <th>Assign Order</th>
-                                                         
+                    <th>Items</th>
+                    <th>Status</th>
+                    <th>Moves</th>
+                    <th>Assign Order</th>                                
                     <th>Action</th>
                           
                 </tr>
@@ -68,18 +70,29 @@
                        
                         <input type="hidden" id="customer_name_table<?=$order_id;?>" value="<?=$value['l_name'];?>">
                     </td>
+                    <td> <?=  $value['order_date_f']; ?></td>
                     <td> <?=  $value['order_number']; ?></td>
                     <td> <?=  $value['l_name']; ?></td>
+                    <td> <?=  $value['customer_mobile']; ?></td>
                     <td> <?=  $value['order_total_amount']; ?></td>
                     <td> <?=  $value['items']; ?></td>
                     <td> <?php echo $value['order_status']; ?></td>                   
                     <td>
-                    <?php if($value['delivery_person_id'] == 0){?>
-                        <button type="button" class="btn btn-success" onclick="assign_delivery('<?= $order_id;?>', '<?= $order_number;?>');" >Assign Delivery</button>
-                    <?php }else{?>
-                        <button type="button" class="btn btn-primary" onclick="assign_delivery('<?= $order_id;?>', '<?= $order_number;?>');" ><?=  $value['delivery_personanme']; ?></button>
-                    <?php }?>
-                        
+               
+                        <form method="POST" action="<?= site_url(); ?>/change_status">
+                            <input type="hidden" name="order_id" value="<?= $value['id']; ?>" />
+                            <input type="hidden" name="order_status" value="Delivered" />
+                            <button   class="btn btn-info" onclick='return onDelivered();'>Delivered</button>
+                        </form>
+
+                    </td>
+                    <td>
+                        <?php if($value['delivery_person_id'] == 0){?>
+                            <button type="button" class="btn btn-success" onclick="assign_delivery('<?= $order_id;?>', '<?= $order_number;?>');" >Assign Delivery</button>
+                        <?php }else{?>
+                            <button type="button" class="btn btn-primary" onclick="assign_delivery('<?= $order_id;?>', '<?= $order_number;?>');" ><?=  $value['delivery_personanme']; ?></button>
+                        <?php }?>
+
                     </td>
                
                     <td>
@@ -89,15 +102,15 @@
                             </button>
                         </a>
                         <?php if($_SESSION['all']['l_role'] == 'superadmin'){?>   
-                            <a href="<?= site_url(); ?>/edit_order/<?= $value['id']; ?>">
+                            <!-- <a href="<?= site_url(); ?>/edit_order/<?= $value['id']; ?>">
                                 <button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit">
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 </button>
-                            </a>
+                            </a> -->
                                 <!-- <a onclick="deleterow(<?= $value['o_id']; ?>);"><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true" ></i></button></a> -->
                         <?php } ?>
 
-                        <a href="#" class="btn btn-danger">Cancel Order</a>
+                       
                     </td>
                     
                 </tr>
@@ -209,6 +222,12 @@
         $('#order_id_modal').html(order_number); 
         $('#save_order_id_modal').val(order_id);     
         $('#customer_name_modal').html($("#customer_name_table"+order_id).val());        
+    }
+
+    function onDelivered(){
+        cv = confirm("Are you sure ?")
+        return cv;
+
     }
 </script>
     

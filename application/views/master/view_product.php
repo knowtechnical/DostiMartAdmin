@@ -36,9 +36,8 @@
                     <th>Category</th>
                     <th>Sub-Category</th>
                     <th>Name</th>
-                    <th>Brand Name</th>
-                    <th>Selling Price</th>
                     <th>MRP</th>
+                    <th>Selling Price</th>
                     <th>Quantity</th>
                     <th>Discount Rate(%)</th>
                     <th>Profit Margin(%)</th>
@@ -60,10 +59,9 @@
                     <td><?=  $count ?></td>
                     <td> <?=  $value['c_name']; ?></td>
                     <td> <?=  $value['s_name']; ?></td>
-                    <td> <?=  $value['p_name']; ?></td>                                                
-                    <td><?=  $value['brand_name']; ?></td>
+                    <td>  <?= " ".$value['p_name']." (".$value['brand_name'].") "; ?></td>  
+                    <td> <?=  $value['p_market_amount']; ?></td>                                              
                     <td> <?=  $value['p_amount']; ?></td>
-                    <td> <?=  $value['p_market_amount']; ?></td>
                      <?php  
                             if($value['p_quantity'] <= 2) {
                                     echo "<td class='red-box'>".$value['p_quantity']."</td>";
@@ -76,10 +74,18 @@
                     <td> <?= $value['status']==1?'Active':'Deactive'; ?></td>
                   
                     <td>
-                    <a href="<?= site_url(); ?>/view_product_details/<?= $value['p_id']; ?>"><button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                    <a href="<?= site_url(); ?>/view_product_details/<?= $value['p_id']; ?>">
+                        <button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit"><i class="fa fa-info-circle" aria-hidden="true"></i>
+                    </button>
                     <?php if($_SESSION['all']['l_role'] == 'superadmin'  ||  $_SESSION['all']['l_role'] == 'admin' || $_SESSION['all']['l_role'] == 'vendor'){?>     
-                    <a href="<?= site_url(); ?>/edit_product/<?= $value['p_id']; ?>"><button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
-                <a onclick="return deleterow(<?= $value['p_id']; ?>);"><button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true" ></i></button></a>
+                        <a href="<?= site_url(); ?>/edit_product/<?= $value['p_id']; ?>">
+                            <button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit">
+                                <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            </button>
+                        </a>
+                         <a onclick="return deleterow(<?= $value['p_id']; ?>);">
+                            <button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true" ></i></button>
+                        </a>
                 <?php } ?>
                  </td>
                 

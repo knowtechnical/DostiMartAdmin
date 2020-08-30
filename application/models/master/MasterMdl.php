@@ -659,10 +659,11 @@ class MasterMdl extends CI_Model {
     }
 
     public function view_orders_v1($where){
-        $this->db->select('o.*,o.customer_name as l_name,d.l_name as delivery_personanme, o.order_items as items');
+        $this->db->select('o.*,o.customer_name as l_name,d.l_name as delivery_personanme, o.order_items as items, DATE_FORMAT(o.order_date, "%d %b %Y %T") as order_date_f');
         $this->db->from('orders o'); 
         $this->db->join('login d', 'd.l_id = o.delivery_person_id','left');
-        $this->db->where($where);  
+        $this->db->where($where);
+        $this->db->order_by('o.id', 'desc');
         $result = $this->db->get()->result_array();  
         //print_r($result); exit;   
         // echo $this->db->last_query();exit;
@@ -976,4 +977,59 @@ class MasterMdl extends CI_Model {
         //print_r($where);
     }
 
+    public function returnInventoryOrderItems($order_id){
+        
+        //Return all quantities from order items to inventory
+        $where = array('order_id' => $order_id, 'active' => '1');
+        $order_items_data = $this->MasterMdl->view_data("order_items", $where);
+        foreach ($order_items_data as $item) {
+
+            $userQuantity = intval($item['quantity']);
+    
+            $query = "SELECT * FROM product WHERE p_id=".$item['product_id'];
+            $inventoryResult = $this->MasterMdl->fireQuery($query);
+
+            //Addition of quantity of inventory after order item is added
+            $where_update = array('p_id'=>$item['product_id']);
+            $totalQuatity = $inventoryResult['0']['p_quantity'];
+            $totalQuatity = intval($totalQuatity) + intval($userQuantity);
+            $form_data = array('p_quantity'=>$totalQuatity);
+            $result = $this->MasterMdl->update_table($where_update, $form_data,'product');
+
+            $where_update = array('order_item_id'=>$item['order_item_id']);
+            $form_data = array('active'=> '0');
+            $this->MasterMdl->update_table($where_update, $form_data,'order_items');
+        }
+    }
+
+    public function returnOrderItemQuantity($order_item_id){
+
+        $where = array('order_item_id' => $order_item_id, 'active' => '1');
+        $order_items_data = $this->MasterMdl->view_data("order_items", $where);
+
+        foreach ($order_items_data as $item) {
+
+            $userQuantity = intval($item['quantity']);
+    
+            $query = "SELECT * FROM product WHERE p_id=".$item['product_id'];
+            $inventoryResult = $this->MasterMdl->fireQuery($query);
+
+            //Addition of quantity of inventory after order item is added
+            $where_update = array('p_id'=>$item['product_id']);
+            $totalQuatity = $inventoryResult['0']['p_quantity'];
+            $totalQuatity = intval($totalQuatity) + intval($userQuantity);
+            $form_data = array('p_quantity'=>$totalQuatity);
+            $result = $this->MasterMdl->update_table($where_update, $form_data,'product');
+
+            $where_update = array('order_item_id'=>$item['order_item_id']);
+            $form_data = array('active'=> '0');
+            $this->MasterMdl->update_table($where_update, $form_data,'order_items');
+        }
+
+    }
+
+    public function deleteData($table, $where){
+        $this->db->where($where);
+        $this->db->delete($table); 
+    }
 }
