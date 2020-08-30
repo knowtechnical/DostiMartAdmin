@@ -33,18 +33,16 @@
                 <tr>
                     <th data-field="state" data-checkbox="true"></th>
                     <th>Sr No</th>
-                    <th>Category</th>
-                    <th>Sub-Category</th>
-                    <th>Name</th>
-                    <th>MRP</th>
-                    <th>Selling Price</th>
-                    <th>Quantity</th>
-                    <th>Discount Rate(%)</th>
-                    <th>Profit Margin(%)</th>
-                  
-                    <th>Status</th>
-                                                      
-                            <th>Action</th>
+                    <th data-sortable="true" data-field="category">Category</th>
+                    <th data-sortable="true" data-field="sub_category">Sub-Category</th>
+                    <th data-sortable="true" data-field="name">Name</th>
+                    <th data-sortable="true" data-field="mrp">MRP</th>
+                    <th data-sortable="true" data-field="selling_price">Selling Price</th>
+                    <th data-sortable="true" data-field="quantity">Quantity</th>
+                    <th data-sortable="true" data-field="discount_rate">Discount Rate(%)</th>
+                    <th data-sortable="true" data-field="profile_margin">Profit Margin(%)</th>
+                             
+                    <th>Action</th>
                            
                 </tr>
             </thead>
@@ -71,8 +69,7 @@
                      ?>
                     <td> <?=  $value['discount_rate']; ?></td>
                     <td> <?=  $value['profile_margin']; ?></td>
-                    <td> <?= $value['status']==1?'Active':'Deactive'; ?></td>
-                  
+           
                     <td>
                     <a href="<?= site_url(); ?>/view_product_details/<?= $value['p_id']; ?>">
                         <button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit"><i class="fa fa-info-circle" aria-hidden="true"></i>
