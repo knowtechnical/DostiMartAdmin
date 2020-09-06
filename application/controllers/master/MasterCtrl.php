@@ -497,6 +497,7 @@ class MasterCtrl extends CI_Controller {
                 'gstin' => $this->input->post('gstin'),
                 'p_description' => $this->input->post('p_description'),
                 'discount_rate' => $this->input->post('discount_rate'),
+                'keywords' => $this->input->post('keywords'),
                 'p_thumbnail' => $uploadimg,
              );
             if ($this->MasterMdl->edit_product($id,$form_data)) {
@@ -1047,32 +1048,30 @@ class MasterCtrl extends CI_Controller {
 			foreach($orders as $row){
                 $order_status = array('0'=>'Deleted','1'=>'In Process','2'=>'Assigned','3'=>'Picked','4'=>'Delivered','5'=>'Cancelled');
 
-                $where_product = array('p.p_delete'=>'1','p.status'=>'1','p.p_id'=>$row['product_id'],'p.fk_category_id'=>$row['category_id']);
-                $product = $this->MasterMdl->api_view_product_details($where_product);
-                //print_r($where_product);exit;
+                $where_product = array('p_delete'=>'1','status'=>'1','p_id'=>$row['product_id']);
+                $product = $this->MasterMdl->view_data("product",$where_product);
+                //print_r($product);exit;
                 $where_offer = array('so.fk_product_id'=>$row['product_id'],'so.fk_order_id'=>$row['order_id']);
                 $offer = $this->MasterMdl->get_offer_details($where_offer);        
                 $offer_amount = count($offer) == 0?0:$offer[0]['so_offer_amount'];   		
            
 
 				$data['result'][$index] = array(
-					'shop_name' => $product['s_name'],
-					'category_name' => $product ['c_name'],
-					'product_name' => $product ['p_name'],
-                    'p_amount' => $product ['p_amount'],
+				    'product_name' => $row['product_name'],
+                    'p_amount' => $product[0]['p_amount'],
                     'p_quantity' => $row['quantity'],
                     'item_total_amount' => $row['item_total_amount'],
                     'order_total_amount' => $row['order_total_amount'],
                     'order_items_total_amount' => $row['order_items_total_amount'],
                     'pickup_discount_amount' => $row['pickup_discount_amount'],
                     'order_delivery_charge_amount' => $row['order_delivery_charge_amount'],
-                    'mrp' => $product['p_market_amount'],
-                    'discount_amount' => $product['p_user_profit'],
+                    'mrp' => $product[0]['p_market_amount'],
+                    'discount_amount' => $product[0]['p_user_profit'],
                     'customer_mobile' => $row['customer_mobile'],
                     'delivery_mode' => $row['delivery_mode'],
                     'customer_address' => $row['customer_address'],
-                    'p_description' => $product ['p_description'],
-                    'p_thumbnail' => $product ['p_thumbnail'],
+                    'p_description' => $product[0]['p_description'],
+                    'p_thumbnail' => $product[0]['p_thumbnail'],
                     'o_overall_product_amount' => $row['order_total_amount'],
                     'order_id' => $row['order_id'],
                     'product_id' => $row['product_id'],
@@ -1082,10 +1081,17 @@ class MasterCtrl extends CI_Controller {
                     'ostatus' => $row['order_status'],
                     'active' => $row['active'],
                     'order_number' => $row['order_number'],
-                    'check_number_of_product' => $index,	
                     
-                   
-					 );				 
+                    'city' => $row['city'],
+                    'house_no' => $row['house_no'],
+                    'street_address' => $row['street_address'],
+                    'apartment_name' => $row['apartment_name'],
+                    'landmark' => $row['landmark'],
+                    'pincode' => $row['pincode'],
+                    'brand_name' => $product[0]['brand_name'],
+                
+                    'check_number_of_product' => $index,	
+					 );					 
                      $index++;           
             }
             //print_r($data);
@@ -1102,26 +1108,24 @@ class MasterCtrl extends CI_Controller {
         $index = 0;
         foreach($orders as $row){
 
-            $where_product = array('p.p_delete'=>'1','p.status'=>'1','p.p_id'=>$row['product_id'],'p.fk_category_id'=>$row['category_id']);
-            $product = $this->MasterMdl->api_view_product_details($where_product);
-            $data['result'][$index] = array(
-                'shop_name' => $product['s_name'],
-                'category_name' => $product ['c_name'],
-                'product_name' => $product ['p_name'],
-                'p_amount' => $product['p_amount'],
+            $where_product = array('p_delete'=>'1','status'=>'1','p_id'=>$row['product_id']);
+            $product = $this->MasterMdl->view_data("product",$where_product);
+              $data['result'][$index] = array(
+                'product_name' => $product[0]['p_name'],
+                'p_amount' => $product[0]['p_amount'],
                 'p_quantity' => $row['quantity'],
                 'item_total_amount' => $row['item_total_amount'],
                 'order_total_amount' => $row['order_total_amount'],
                 'order_items_total_amount' => $row['order_items_total_amount'],
                 'pickup_discount_amount' => $row['pickup_discount_amount'],
                 'order_delivery_charge_amount' => $row['order_delivery_charge_amount'],
-                'mrp' => $product['p_market_amount'],
-                'discount_amount' => $product['p_user_profit'],
+                'mrp' => $product[0]['p_market_amount'],
+                'discount_amount' => $product[0]['p_user_profit'],
                 'customer_mobile' => $row['customer_mobile'],
                 'delivery_mode' => $row['delivery_mode'],
                 'customer_address' => $row['customer_address'],
-                'p_description' => $product ['p_description'],
-                'p_thumbnail' => $product ['p_thumbnail'],
+                'p_description' => $product[0]['p_description'],
+                'p_thumbnail' => $product[0]['p_thumbnail'],
                 'o_overall_product_amount' => $row['order_total_amount'],
                 'order_id' => $row['order_id'],
                 'product_id' => $row['product_id'],
@@ -1138,11 +1142,11 @@ class MasterCtrl extends CI_Controller {
                 'apartment_name' => $row['apartment_name'],
                 'landmark' => $row['landmark'],
                 'pincode' => $row['pincode'],
-
-                'brand_name' => $product['brand_name'],
+                'brand_name' => $product[0]['brand_name'],
+                'p_quantity_description' => $product[0]['p_quantity_description'],
                 'check_number_of_product' => $index,	
                 
-                 );				 
+                 );				
 
             $index++; 
         }

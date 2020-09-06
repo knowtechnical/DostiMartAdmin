@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>PMart</title>
+    <title>DostiMart</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -90,7 +90,7 @@
 	<div class="error-pagewrap">
 		<div class="error-page-int">
 			<div class="text-center m-b-md custom-login">
-				<h3 class="quadrat">PLEASE LOGIN</h3>
+				<h3 class="quadrat">Login DostiMart</h3>
 				<p>This</p>
 			</div>
 			<div class="content-error">

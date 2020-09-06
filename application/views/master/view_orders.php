@@ -43,13 +43,13 @@
                 <tr>
                     <th data-field="state" data-checkbox="true"></th>
                     <th data-field="id">Sr No</th>
-                    <th >Order Date</th>
-                    <th>Order Id</th>
+                    <th data-sortable="true" data-field="order_date">Order Date</th>
+                    <th data-sortable="true" data-field="order_number">Order Id</th>
                     <th>User Name</th>
                     <th>Mobile</th>
                     <th>Amount</th>
                     <th>Items</th>
-                    <th>Status</th>
+                    <th data-sortable="true" data-field="order_status">Status</th>
                     <th>Moves</th>
                     <th>Assign Order</th>                                
                     <th>Action</th>
@@ -78,18 +78,20 @@
                     <td> <?=  $value['items']; ?></td>
                     <td> <?php echo $value['order_status']; ?></td>                   
                     <td>
+                      <?php if($value['order_status'] == 'In Process'){  ?>
                
                         <form method="POST" action="<?= site_url(); ?>/change_status">
                             <input type="hidden" name="order_id" value="<?= $value['id']; ?>" />
                             <input type="hidden" name="order_status" value="Delivered" />
                             <button   class="btn btn-info" onclick='return onDelivered();'>Delivered</button>
                         </form>
-
+                        
+                      <?php } ?>
                     </td>
                     <td>
-                        <?php if($value['delivery_person_id'] == 0){?>
+                       <?php if($value['delivery_person_id'] == 0 && $value['order_status'] == 'In Process'){?>
                             <button type="button" class="btn btn-success" onclick="assign_delivery('<?= $order_id;?>', '<?= $order_number;?>');" >Assign Delivery</button>
-                        <?php }else{?>
+                       <?php }else if($value['order_status'] == 'Assigned'){?>
                             <button type="button" class="btn btn-primary" onclick="assign_delivery('<?= $order_id;?>', '<?= $order_number;?>');" ><?=  $value['delivery_personanme']; ?></button>
                         <?php }?>
 
