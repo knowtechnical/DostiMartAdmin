@@ -293,7 +293,7 @@ function autocomplete(inp, arr) {
                         name = '';
                         for (j = 0; j < myObj.data.length; ++j) {
                           if(selectedValue == myObj.data[j].p_id) {
-                            name = myObj.data[j].p_name;
+                            name = myObj.data[j].p_name + '';
                           }
                         }
                        

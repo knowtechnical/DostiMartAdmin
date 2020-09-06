@@ -41,7 +41,7 @@
                     <th data-sortable="true" data-field="quantity">Quantity</th>
                     <th data-sortable="true" data-field="discount_rate">Discount Rate(%)</th>
                     <th data-sortable="true" data-field="profile_margin">Profit Margin(%)</th>
-                             
+                  
                     <th>Action</th>
                            
                 </tr>
@@ -69,7 +69,6 @@
                      ?>
                     <td> <?=  $value['discount_rate']; ?></td>
                     <td> <?=  $value['profile_margin']; ?></td>
-           
                     <td>
                     <a href="<?= site_url(); ?>/view_product_details/<?= $value['p_id']; ?>">
                         <button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit"><i class="fa fa-info-circle" aria-hidden="true"></i>

@@ -80,7 +80,7 @@
                                 ?>
                                                 <tr>
                                                     <td> <?=  $count; ?></td>    
-                                                    <td> <?= " ".$value['product_name']." (".$value['brand_name'].") "; ?></td> 
+                                                    <td> <?= " ".$value['product_name']." - ".$value['p_quantity_description']."<strong> (".$value['brand_name'].")</strong>  "; ?></td> 
                                                     <td> <?=  $value['mrp']; ?></td>                  
                                                     <td> <?=  $value['p_quantity']; ?></td>
                                                     <td> <?=  $value['discount_amount']; ?></td> 
