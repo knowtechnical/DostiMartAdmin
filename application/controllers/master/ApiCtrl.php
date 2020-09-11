@@ -27,10 +27,10 @@ class ApiCtrl extends CI_Controller {
         $product_name = $this->input->post('product_name');
         if(isset($product_name)) {
 
-            $query = $this->db->query("select p_id, p_name, p_amount as price, ceiling((p_user_profit/p_market_amount)*100) as save_percent
+            $query = $this->db->query("select p_id, brand_name, p_quantity_description, p_name, p_amount as price, ceiling((p_user_profit/p_market_amount)*100) as save_percent
             from 
             product
-            where (p_name like '%$product_name%' or brand_name like '%$product_name%') and p_delete=1 ");
+            where (p_name like '%$product_name%' or brand_name like '%$product_name%' or keywords like '%$product_name%' ) and p_delete=1 ");
             $result = $query->result_array();
 
             $response['data'] = $result;
@@ -39,7 +39,22 @@ class ApiCtrl extends CI_Controller {
         exit;	
     }
 
+    public function api_fetchProductsByBrandName() { //http://localhost/mezban/index.php/api_fetchProductsByBrandName
+        $response = array();
+        $product_name = $this->input->post('brand_name');
+        if(isset($product_name)) {
 
+            $query = $this->db->query("select p_id, brand_name, p_market_amount, p_quantity_description, p_name, p_amount as price, ceiling((p_user_profit/p_market_amount)*100) as save_percent
+            from 
+            product
+            where ( brand_name='$product_name') and p_delete=1 ");
+            $result = $query->result_array();
+
+            $response['data'] = $result;
+        }
+        print_r(json_encode($response));
+        exit;	
+    }
 
 	public function api_login() {  // http://localhost/mezban/index.php/api_login?email=borolejivan@gmail.com&password=123456&role=superadmin
 		$email = $this->input->get('email');

@@ -140,6 +140,7 @@ $route['api_view_shop_details'] = "master/ApiCtrl/api_view_shop_details";
 $route['api_insert_order'] = "master/ApiCtrl/api_insert_order";
 $route['api_signup_user'] = "master/ApiCtrl/api_signup_user";
 $route['api_login_user'] = "master/ApiCtrl/api_login_user";
+$route['api_fetchProductsByBrandName'] = "master/ApiCtrl/api_fetchProductsByBrandName";
 ////////////// STRAT API ROUTES   ///////////////////////////
 
 

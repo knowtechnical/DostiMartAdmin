@@ -25,29 +25,63 @@
 								<div class="form-group-inner">
 									<div class="row">
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-											<label class="login2 pull-right pull-right-pro" for="l_name">Customer Name</label>
+											<label class="login2 pull-right pull-right-pro" for="customer_name">Customer Name</label>
 										</div>
 										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-											<input type="text" id="customer_name" name="customer_name" class="form-control" autocomplete="off" value="<?php if (isset($row['customer_name'])) echo $row['customer_name'] ?>" /> </div>
+											<input type="text" id="customer_name" name="customer_name" class="form-control validate[required] text-input" autocomplete="off" value="<?php if (isset($row['customer_name'])) echo $row['customer_name'] ?>" /> </div>
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-											<label class="login2 pull-right pull-right-pro" for="l_mobile">Customer Number</label>
+											<label class="login2 pull-right pull-right-pro" for="l_mobile">Customer Mobile</label>
 										</div>
 										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-											<input type="text" id="customer_mobile" name="customer_mobile" class="form-control" autocomplete="off" value="<?php if (isset($row['customer_mobile'])) echo $row['customer_mobile'] ?>" /> </div>
+											<input type="text" id="customer_mobile" name="customer_mobile" class="form-control validate[required] text-input" autocomplete="off" value="<?php if (isset($row['customer_mobile'])) echo $row['customer_mobile'] ?>" /> </div>
 									</div>
 								</div>
+
+                                <div class="form-group-inner">
+									<div class="row">
+										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+											<label class="login2 pull-right pull-right-pro" for="customer_address">Customer Address</label>
+										</div>
+										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+											<input type="text" id="customer_address" name="customer_address" class="form-control validate[required] text-input" placeholder="Customer Address"  value="<?php if (isset($row['customer_address'])) echo $row['customer_address'] ?>" /> 
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+											<label class="login2 pull-right pull-right-pro" for="l_mobile">Pick Up</label>
+										</div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                        <input type="checkbox" name="pickup" id="pickup" value="PickUp" style="height:30px;width:30px;" <?php if (isset($row['delivery_mode']) && $row['delivery_mode'] == "PickUp"){ echo 'checked';} ?> /> 
+                    </div>
+										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 clearfix"> </div>
+									</div>
+								</div>
+
 								<div class="form-group-inner">
 									<div class="row">
+
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
 											<label class="login2 pull-right pull-right-pro" for="a_name">Select Products</label>
 										</div>
-										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                           <div class="autocomplete" >
                           <!-- <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product Name" autocomplete="off" />  -->
-                              <input id="myInput" autocomplete="off" style="width:270px" type="text" name="myCountry" placeholder="Product Name">
+                            <select  id="brand_show"  style="width:270px; height:40px;" onchange="return onBrand(this.value);">
+                                      <option value=''>Select Brand Name</option>
+                              <?php  foreach ($brandNames as $item) { ?>
+                                      <option value="<?php echo $item['brand_name']; ?>" ><?php echo $item['brand_name']; ?></option>
+                              <?php  } ?>
+                            </select>
                           </div>
 	                  </div>
-                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" id="product_div">
+                        
+                          <!-- <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product Name" autocomplete="off" />  -->
+                            <select id="product_show" style="width:350px; height:40px;">
+                            </select>
+           
+	                  </div>
+	                  <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                         <input id="add_quantity" class="form-control" type="text" name="add_quantity" placeholder="Qty">
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
@@ -72,11 +106,11 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody id="add_row">
-                                                <?php  if(isset($items)){
+                                                <?php $count = 0; if(isset($items)){
                                                           $count = 1;
                                                           foreach ($items as $value) {
                                                 ?>
-                                                    <tr>
+                                                    <tr id="row<?=  $count; ?>">
                                                         <td><?= $count?></td>
                                                         <td> 
                                                             <?=  $value['name'] ?>
@@ -92,9 +126,10 @@
                                                         <td>
                                                             <button class="btn btn-danger" name="remove<?= $count?>" id="remove<?= $count?>" onclick="return onDeleteItem(<?= $count?>)" >Delete</button>
                                                             <input type="hidden" value="<?=  $value['id']; ?>" name="added_product<?= $count?>" id="added_product<?= $count?>" />
-                                                            <input type="hidden" value="active" name="active<?= $count?>" id="active<?= $count?>" />
+                                                            
                                                         </td>
                                                     </tr>
+                                                    <input type="hidden" value="active" name="active<?= $count?>" id="active<?= $count?>" />
                                                 <?php $count++; } } ?>
                                                 </tbody>
                                             </table>
@@ -110,8 +145,8 @@
 											<div class="col-lg-9">
 												<div class="login-horizental cancel-wp pull-left form-bc-ele">
                           <input id="total_count" type="hidden" name="total_count" value="<?= count($items) ?>">
-													<button class="btn btn-info" type="submit" name="update">Update</button>
-													<a class="btn btn-default" href="<?= site_url();?>/view_orders">
+													<button class="btn btn-info" type="submit" name="update" onclick="return onPlaceOrder();">Place Order</button>
+													<a class="btn btn-default" href="<?= site_url();?>/view_order_details/<?= $this->uri->segment(2, 0);?>">
 													  Cancel 
 													</a>
 												</div>
@@ -189,6 +224,7 @@
 }
 </style>
 
+<script src="<?php echo base_url(); ?>assets/js/jqueryui/jquery.searchabledropdown-1.0.8.min.js"></script>
 <script>
 function deleteimg(id) {
 	// alert(id);
@@ -209,166 +245,16 @@ function deleteimg(id) {
 
 </script>
 
-
 <script>
 actual_count = <?php echo $count-1; ?>;
 counter = <?php echo $count-1; ?>;
 productname = '';
 product_id = 0;
 var jsonObj;
-function autocomplete(inp, arr) {
-  /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
-  var currentFocus;
-  /*execute a function when someone writes in the text field:*/
-  inp.addEventListener("input", function(e) {
-
-    val = this.value;
-    parentNode = this.parentNode;
-    id = this.id;
-    if(val.length >= 3) {
-
-        $.ajax({
-            type: "post",
-            url: "<?php echo site_url('/api_fetchProductsByName') ?>",
-            data: {
-                product_name: val
-            },
-            datatype: "text",
-            success: function(data) {
-                
-                var a, b, i;
-                
-                myObj  = JSON.parse(data)
-                jsonObj = myObj
-                arr = [];
-                product_ids = []
-                //alert(myObj.data.length);
-
-                j = 0;
-                for (j = 0; j < myObj.data.length; ++j) {
-                    arr[j] = myObj.data[j].p_name;
-                    product_ids[j] = myObj.data[j].p_id;
-                }
-
-                /*close any already open lists of autocompleted values*/
-                closeAllLists();
-                if (!val) { return false;}
-                currentFocus = -1;
-                /*create a DIV element that will contain the items (values):*/
-                a = document.createElement("DIV");
-                a.setAttribute("id", id + "autocomplete-list");
-                a.setAttribute("class", "autocomplete-items");
-                /*append the DIV element as a child of the autocomplete container:*/
-                parentNode.appendChild(a);
-                /*for each item in the array...*/
-                for (i = 0; i < arr.length; i++) {
-                    /*check if the item starts with the same letters as the text field value:*/
-                    
-                    /*create a DIV element for each matching element:*/
-                    b = document.createElement("DIV");
-                    /*make the matching letters bold:*/
-                    b.innerHTML = "" + arr[i].substr(0, val.length) + "";
-                    b.innerHTML += arr[i].substr(val.length);
-                    /*insert a input field that will hold the current array item's value:*/
-                    b.innerHTML += "<input type='hidden' value='" + product_ids[i] + "'>";
-                    /*execute a function when someone clicks on the item value (DIV element):*/
-                    b.addEventListener("click", function(e) {
-                        /*insert the value for the autocomplete text field:*/
-                        
-                        selectedValue = this.getElementsByTagName("input")[0].value;
-                        name = '';
-                        for (j = 0; j < myObj.data.length; ++j) {
-                          if(selectedValue == myObj.data[j].p_id) {
-                            name = myObj.data[j].p_name;
-                          }
-                        }
-                       
-                        productname = name;
-                        product_id = selectedValue;
-                        /*close the list of autocompleted values,
-                        (or any other open lists of autocompleted values:*/
-                        closeAllLists();
-                        inp.value = productname;
-                        $("#add_quantity").focus();  
-                    });
-                    a.appendChild(b);
-                    
-                }
-
-
-            }
-        });
-    } else {
-      closeAllLists();
-    }
-
-
-      
-  });
-  /*execute a function presses a key on the keyboard:*/
-  inp.addEventListener("keydown", function(e) {
-      var x = document.getElementById(this.id + "autocomplete-list");
-      if (x) x = x.getElementsByTagName("div");
-      if (e.keyCode == 40) {
-        /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
-        currentFocus++;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 38) { //up
-        /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
-        currentFocus--;
-        /*and and make the current item more visible:*/
-        addActive(x);
-      } else if (e.keyCode == 13) {
-        /*If the ENTER key is pressed, prevent the form from being submitted,*/
-        e.preventDefault();
-        if (currentFocus > -1) {
-          /*and simulate a click on the "active" item:*/
-          if (x) x[currentFocus].click();
-        }
-      }
-  });
-  function addActive(x) {
-    /*a function to classify an item as "active":*/
-    if (!x) return false;
-    /*start by removing the "active" class on all items:*/
-    removeActive(x);
-    if (currentFocus >= x.length) currentFocus = 0;
-    if (currentFocus < 0) currentFocus = (x.length - 1);
-    /*add class "autocomplete-active":*/
-    x[currentFocus].classList.add("autocomplete-active");
-  }
-  function removeActive(x) {
-    /*a function to remove the "active" class from all autocomplete items:*/
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
-    }
-  }
-  function closeAllLists(elmnt) {
-    /*close all autocomplete lists in the document,
-    except the one passed as an argument:*/
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-        x[i].parentNode.removeChild(x[i]);
-      }
-    }
-  }
-  /*execute a function when someone clicks in the document:*/
-  document.addEventListener("click", function (e) {
-      closeAllLists(e.target);
-  });
-}
-
 
 /*An array containing all the country names in the world:*/
 var countries = [];
 
-/*initiate the autocomplete function on the "myInput" element, and pass along the countries array as possible autocomplete values:*/
-autocomplete(document.getElementById("myInput"), countries);
 
 function onUpdateItemQty(value, index, unitPrice){
     var subTotal = parseFloat(unitPrice)*value;
@@ -390,37 +276,42 @@ function onDeleteItem(index){
 
 function onAddProduct() {
   
-  if (typeof selectedValue === "undefined" || $('#add_quantity').val() == '') {
+  selectedValue = $('#product_show').val();
+  if (typeof selectedValue === "undefined" || $('#add_quantity').val() == '' || selectedValue == '') {
         alert('Please fill information to add product');
         return false;
   }
   
   if(!checkProductExists(selectedValue)){
-        for (j = 0; j < jsonObj.data.length; ++j) {
-                if(selectedValue == jsonObj.data[j].p_id) {
-                counter = counter + 1;
-                actual_count = actual_count + 1;
-                name = jsonObj.data[j].p_name;
-                add_quantity = $('#add_quantity').val();
-                subTotal = parseFloat(add_quantity)*parseFloat(jsonObj.data[j].price);
-                $('#add_row').append('<tr id="row'+counter+'"><td>'+counter+'</td> '+
-                                            '<td>'+jsonObj.data[j].p_name+'</td> '+
-                                            '<td><input type="text" class="quantity" name="quantity'+counter+'" onkeyup="return onUpdateItemQty(this.value,'+counter+','+jsonObj.data[j].price+')" id="quantity'+counter+'" value="'+add_quantity+'" /></td> '+
-                                            '<td>'+jsonObj.data[j].price+'</td> '+
-                                            '<td><span name="item_amount'+counter+'" id="item_amount'+counter+'" >'+subTotal+'</span></td>'+
-                                            '<td><button class="btn btn-danger" name="remove'+counter+'" id="reomve'+counter+'" onclick="return onDeleteItem('+counter+')" >Delete</button>'+
-                                            '<input type="hidden" value="'+jsonObj.data[j].p_id+'" name="added_product'+counter+'" id="added_product'+counter+'" />'+
-                                            '</td></tr>');
-                    $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />')
-                
-                }
+
+    for (j = 0; j < jsonObj.data.length; ++j) {
+        if(selectedValue == jsonObj.data[j].p_id) {
+        counter = counter + 1;
+        actual_count = actual_count + 1;
+        name = myObj.data[j].p_name + ' - '+myObj.data[j].p_quantity_description+' ('+myObj.data[j].brand_name+')';
+        add_quantity = $('#add_quantity').val();
+        subTotal = parseFloat(add_quantity)*parseFloat(jsonObj.data[j].price);
+        $('#add_row').append('<tr id="row'+counter+'"><td>'+counter+'</td> '+
+                                    '<td>'+name+'</td> '+
+                                    '<td><input type="text" class="quantity" name="quantity'+counter+'" onkeyup="return onUpdateItemQty(this.value,'+counter+','+jsonObj.data[j].price+')" id="quantity'+counter+'" value="'+add_quantity+'" /></td> '+
+                                    '<td>'+jsonObj.data[j].price+'</td> '+
+                                    '<td><span name="item_amount'+counter+'" id="item_amount'+counter+'" >'+subTotal+'</span></td>'+
+                                    '<td><button class="btn btn-danger" name="remove'+counter+'" id="reomve'+counter+'" onclick="return onDeleteItem('+counter+')" >Delete</button>'+
+                                    '<input type="hidden" value="'+jsonObj.data[j].p_id+'" name="added_product'+counter+'" id="added_product'+counter+'" />'+
+                                    '</td></tr>');
+            $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />')
+        
         }
-
-        $('#total_count').val(counter);
-  } else {
-      alert('Item already exists in the list');
-  }
-
+    }
+  
+      $('#total_count').val(counter);
+    } else {
+        alert('Item already exists in the list');
+    }
+  
+  $("#brand_show").focus();
+  //$('#myInput').val('');
+  //$('#myInput').focus();
   return false;
 }
 
@@ -436,8 +327,39 @@ function checkProductExists(id) {
     return productExists;
 }
 
+function onBrand(brandName){
+  //alert(brandName);
+  $.ajax({
+            type: "post",
+            url: "<?php echo site_url('/api_fetchProductsByBrandName') ?>",
+            data: {
+                brand_name: brandName
+            },
+            datatype: "text",
+            success: function(data) {
+              //alert(data);
+
+              myObj  = JSON.parse(data)
+              jsonObj = myObj
+
+              j = 0;
+              html = '';
+              for (j = 0; j < myObj.data.length; ++j) {
+                   product_name = myObj.data[j].p_name + ' - '+myObj.data[j].p_quantity_description+' - MRP: '+myObj.data[j].p_market_amount;
+                   html = html + '<option value="'+myObj.data[j].p_id+'"> '+product_name+' </option>';
+              }
+
+              $('#product_show').html(html);
+              select = $('#product_div div select:nth-child(2)');
+              //alert(select.html())
+              select.html(html);
+            }
+  });
+  return true;
+}
+
 function onPlaceOrder(){
-    conf = confirm("Are you sure , you want to delete?");
+    conf = confirm("Are you sure , you want to place order?");
     if(conf) {
             if(actual_count == 0){
                 alert('Please add items to place order');
@@ -448,4 +370,25 @@ function onPlaceOrder(){
 
     return false;
 }
+
+jQuery.browser = {};
+(function () {
+    jQuery.browser.msie = false;
+    jQuery.browser.version = 0;
+    if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+        jQuery.browser.msie = true;
+        jQuery.browser.version = RegExp.$1;
+    }
+})();
+
+$(document).ready(function() {
+			$("#brand_show").searchable();
+      $("#product_show").searchable();
+
+      $("#product_div div input").focus(function(){
+        $("#product_div div input").val('');
+      });
+});
+	
 </script>
+
