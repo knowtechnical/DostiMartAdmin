@@ -1050,7 +1050,7 @@ class MasterCtrl extends CI_Controller {
 
                 $where_product = array('p_delete'=>'1','status'=>'1','p_id'=>$row['product_id']);
                 $product = $this->MasterMdl->view_data("product",$where_product);
-                //print_r($product);exit;
+                //print_r($where_product);exit;
                 $where_offer = array('so.fk_product_id'=>$row['product_id'],'so.fk_order_id'=>$row['order_id']);
                 $offer = $this->MasterMdl->get_offer_details($where_offer);        
                 $offer_amount = count($offer) == 0?0:$offer[0]['so_offer_amount'];   		
@@ -1110,7 +1110,7 @@ class MasterCtrl extends CI_Controller {
 
             $where_product = array('p_delete'=>'1','status'=>'1','p_id'=>$row['product_id']);
             $product = $this->MasterMdl->view_data("product",$where_product);
-              $data['result'][$index] = array(
+            $data['result'][$index] = array(
                 'product_name' => $product[0]['p_name'],
                 'p_amount' => $product[0]['p_amount'],
                 'p_quantity' => $row['quantity'],
@@ -1146,7 +1146,7 @@ class MasterCtrl extends CI_Controller {
                 'p_quantity_description' => $product[0]['p_quantity_description'],
                 'check_number_of_product' => $index,	
                 
-                 );				
+                 );
 
             $index++; 
         }
@@ -1221,13 +1221,18 @@ class MasterCtrl extends CI_Controller {
         $order_number = $order_data[0]['order_number'];
 
         $userItems = array();
-        $orderItem = array();
+        $orderItems = $this->MasterMdl->get_order($order_id);
+
         if (isset($_POST['update'])) {         
             
             
             $total_item_count = $_POST['total_count'];
+            $orderItems['delivery_mode'] = $this->input->post('pickup') == "" ? "Home" : "PickUp";
+            $orderItems["customer_address"] = $_POST["customer_address"];
+            $orderItems["customer_name"] = $_POST["customer_name"];
+            $orderItems["customer_mobile"] = $_POST["customer_mobile"];
+            $orderItems["pickup"] = $this->input->post('pickup') == "" ? "Home" : "PickUp";
 
-            
             //Check availability of products.
             $isInventoryAvailable = true;
             $order_items = 0;
@@ -1321,6 +1326,14 @@ class MasterCtrl extends CI_Controller {
     
                 }
 
+                $order_data_update = array(
+                    'customer_name' =>$orderItems["customer_name"],  				
+                    'customer_mobile' => $orderItems["customer_mobile"],
+                    'delivery_mode' => $orderItems['delivery_mode']
+                );
+                $where = array('id' => $order_id);
+                $this->MasterMdl->update_table($where ,$order_data_update, "orders");
+
                 $this->MasterMdl->updateOrderPrice($order_id);
                 redirect('view_order_details/'.$order_id);
 
@@ -1330,8 +1343,15 @@ class MasterCtrl extends CI_Controller {
             # redirect('view_advertisment');
         }        
 
-        $data['row'] = $this->MasterMdl->get_order($order_id); 
+ 
+        $data['row'] = $orderItems; 
         $data['items'] = $userItems;
+
+        $brandNames = array();
+        $where = array('p_delete'=> '1');
+        $brandNames = $this->MasterMdl->getAllBrands($where);
+        $data['brandNames'] = $brandNames;
+
         //print_r($data);
         //$data['row_img'] = $this->MasterMdl->get_adimg($id);     
         //print_r($data['row']);exit;
@@ -1420,6 +1440,7 @@ class MasterCtrl extends CI_Controller {
             $orderItem["customer_address"] = $_POST["customer_address"];
             $orderItem["customer_name"] = $_POST["customer_name"];
             $orderItem["customer_mobile"] = $_POST["customer_mobile"];
+            $orderItem["pickup"] = $this->input->post('pickup') == "" ? "Home" : "PickUp";
 
             for($j = 1; $j <= $total_item_count; $j++){
  
@@ -1460,6 +1481,7 @@ class MasterCtrl extends CI_Controller {
 
             // If inventory available then only proceed to place order
             if($isInventoryAvailable) {
+                $delivery_mode= $this->input->post('pickup') == "" ? "Home" : "PickUp";
                 //echo "Hello";
 
                 //Fetch delivery charges and thresold
@@ -1468,12 +1490,18 @@ class MasterCtrl extends CI_Controller {
                 $where = array('key'=>'delivery_thresold', 'delete'=>'1');
                 $delivery_thresold = floatval($this->MasterMdl->view_data('extras_content', $where)[0]['amount']);
 
-                // apply delivery charges only if order item total amount exceeds delivery thresold
-                $order_delivery_charge_amount = $order_items_total_amount >= $delivery_thresold ? 0 : $order_delivery_charge_amount;
+                // apply delivery charges only if order item total amount exceeds delivery thresold or delivery mode is PickUp
+			    $order_delivery_charge_amount = $order_items_total_amount >= $delivery_thresold || $delivery_mode == "PickUp" ? 0 : $order_delivery_charge_amount;
 
                 //calculate order total amount = order items total - delivery charges
                 $order_total_amount = $order_items_total_amount + $order_delivery_charge_amount;
 
+                //Calculating pickup discount amount when order_delivery mode is PickUp
+			    $order_items_discount_amount = $order_savings_amount;
+			    $pickup_discount_amount = $delivery_mode == "PickUp" ? 0.02 * $order_items_total_amount : 0;
+			    $order_total_amount = $order_total_amount - $pickup_discount_amount;
+                $order_savings_amount = $order_savings_amount + $pickup_discount_amount;
+            
                 $unque_order_id = $this->MasterMdl->getIdGenerator("order");
                 $order_number = "DM".date('dmY').$unque_order_id;
                 $order_data = array(
@@ -1482,15 +1510,18 @@ class MasterCtrl extends CI_Controller {
                     'customer_address' => $orderItem["customer_address"],
                     'customer_mobile' =>  $orderItem["customer_mobile"],  
                     'near_address' => "",
-                    'order_items' => $order_items,  				
+                    'order_items' => $order_items,
+                    'delivery_mode' => $delivery_mode,
                     'order_items_total_amount' => $order_items_total_amount,
                     'order_delivery_charge_amount' => $order_delivery_charge_amount,
                     'order_savings_amount' => $order_savings_amount,
                     'order_total_amount' => $order_total_amount,
+                    'order_items_discount_amount' => $order_items_discount_amount,
+                    'pickup_discount_amount' => $pickup_discount_amount,
                     'order_weight_quantity' => 0,
                     'order_weight_amount' => 0,    
                     'zone_id' => 5,    
-                    'order_date' => "2020-08-19",
+                    'order_date' => date('Y-m-d H:i'),
                     );
 
 
@@ -1545,6 +1576,8 @@ class MasterCtrl extends CI_Controller {
                     $result = $this->MasterMdl->update_table($where_update, $form_data,'product');
     
                 }
+                
+                $this->MasterMdl->sendNotificationToAdmins($order_id, $order_number);
 
                 redirect('view_order_details/'.$order_id);
             }
@@ -1554,6 +1587,11 @@ class MasterCtrl extends CI_Controller {
 
         $data['row'] = $orderItem;
         $data['items'] = $userItems;
+
+        $brandNames = array();
+        $where = array('p_delete'=> '1');
+        $brandNames = $this->MasterMdl->getAllBrands($where);
+        $data['brandNames'] = $brandNames;
         //print_r($data);
         $this->load->view('master/add_order', $data);
     }
@@ -1577,7 +1615,7 @@ class MasterCtrl extends CI_Controller {
         }    
     }
 
-     public function view_push_notification() {        
+    public function view_push_notification() {        
 					 
 			//	$conn=mysqli_connect("localhost", "sahyadhri_user", "Sahyadhri@2017", "db_sahyadhri") or
 			//	die("Could not connect: " . mysqli_error());
@@ -1639,48 +1677,47 @@ class MasterCtrl extends CI_Controller {
 			curl_close( $ch );
 			print_r($result);exit;
      }
-	 
-	 
-			
-	 public function view_pushnotification() {
+	 	 		
+
+     public function view_pushnotification() {
         if (isset($_POST['submit'])) {		
-			
-			
-			
+		
             $form_data = array(
             'fk_zone_id' => $this->input->post('fk_zone_id'),
 			'title' => $this->input->post('title'),
 			'message' => $this->input->post('message'),
 			'date' => date('Y-m-d H:i:s'),
             );
-        if ($insert_id = $this->MasterMdl->add_pushnotification($form_data)) {
-			
-			// SEND PUSH NOTIFICATION  //$token_id = array('fqM9ubvpTsM:APA91bFwLR1L6qcOq13bAUSuF2Ucv1McfODefnyX5ZMrlUPAt9J2DuAJs-R-SUbwIX2zbVr-jppb0pKpWg6kzrzQ_QX38B7BcsP2hhbN34NmtIrzgsUjkm-0mkXfmCaaCnhlfWo6r8H7');
-			$zoneqid = $this->input->post('fk_zone_id');
-			$tokens = $this->MasterMdl->get_notifications_token($zoneqid,'user');
-		//	print_r($tokens);exit;
-			//$whereudatashow = array('order_id'=>$this->input->post('order_id'));
-			//$udatashow = $this->MasterMdl->view_orders($whereudatashow);
-				//print_r($udatashow);exit;
-			
-			$pnotestatus = array();
-			foreach($tokens as $tok){			
-				$token_id = array($tok['user_token']);
-				$title  = $this->input->post('title');
-				$msg = $this->input->post('message');
-				$resp = $this->MasterMdl->send_push_notification($token_id,$title,$msg);
-				$pnotestatus[] =  $resp;
-			}
-			
-			// END PUSH NOTIFICATION		
-            $_SESSION['responsemsg'] = "Send Successfully";
-            redirect('view_pushnotification');
-        } else {
-            $_SESSION['responsemsg'] = "Error";
-            redirect('view_pushnotification');
+            if ($insert_id = $this->MasterMdl->add_pushnotification($form_data)) {
+                
+                // SEND PUSH NOTIFICATION  //$token_id = array('fqM9ubvpTsM:APA91bFwLR1L6qcOq13bAUSuF2Ucv1McfODefnyX5ZMrlUPAt9J2DuAJs-R-SUbwIX2zbVr-jppb0pKpWg6kzrzQ_QX38B7BcsP2hhbN34NmtIrzgsUjkm-0mkXfmCaaCnhlfWo6r8H7');
+                $zoneqid = $this->input->post('fk_zone_id');
+                $tokens = $this->MasterMdl->get_notifications_token($zoneqid,'user');
+            //	print_r($tokens);exit;
+                //$whereudatashow = array('order_id'=>$this->input->post('order_id'));
+                //$udatashow = $this->MasterMdl->view_orders($whereudatashow);
+                    //print_r($udatashow);exit;
+                
+                $pnotestatus = array();
+                foreach($tokens as $tok){			
+                    $token_id = array($tok['user_token']);
+                    $title  = $this->input->post('title');
+                    $msg = $this->input->post('message');
+                    $resp = $this->MasterMdl->send_push_notification($token_id,$title,$msg);
+                    $pnotestatus[] =  $resp;
+                }
+                
+                // END PUSH NOTIFICATION		
+                $_SESSION['responsemsg'] = "Send Successfully";
+                redirect('view_pushnotification');
+            } else {
+                $_SESSION['responsemsg'] = "Error";
+                redirect('view_pushnotification');
+            }
+
         }
-    }
-		 $wherezone = array('z_delete'=>'1','status'=>'1');
+
+        $wherezone = array('z_delete'=>'1','status'=>'1');
         $data['zone'] = $this->MasterMdl->view_zone($wherezone);
         
         $data['result'] = $this->MasterMdl->view_pushnotification(array());

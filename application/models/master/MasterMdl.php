@@ -658,12 +658,22 @@ class MasterMdl extends CI_Model {
         return $result;
     }
 
+    public function getAllBrands($where){
+        $this->db->select('p.*');
+        $this->db->from('product p'); 
+        $this->db->where($where);  
+        $this->db->group_by('p.brand_name');
+        $this->db->order_by('p.brand_name', 'asc'); 
+        $result = $this->db->get()->result_array();  
+        return $result;
+    }
+
     public function view_orders_v1($where){
         $this->db->select('o.*,o.customer_name as l_name,d.l_name as delivery_personanme, o.order_items as items, DATE_FORMAT(o.order_date, "%d %b %Y %T") as order_date_f');
         $this->db->from('orders o'); 
         $this->db->join('login d', 'd.l_id = o.delivery_person_id','left');
         $this->db->where($where);
-        $this->db->order_by('o.id', 'desc');
+        $this->db->order_by('o.order_date', 'desc');
         $result = $this->db->get()->result_array();  
         //print_r($result); exit;   
         // echo $this->db->last_query();exit;
@@ -790,7 +800,7 @@ class MasterMdl extends CI_Model {
 	public function send_push_notification($token_id,$title,$msg){
 							// API access key from Google API's Console
 				//define( 'API_ACCESS_KEY', 'AAAAFsI2Bao:APA91bEdwRXOAStM2a0qIcvVF3Q_8NzVP8ZH3E_mgw2JcEyt3cuWHM6S6DPneGfJ6BJzDR2DqFeG9v7fN6zlkp5uYr98gl_Sdrio7EJKUy56oWIaCQQsAV0MkmutChiZMzeoPlvFCUpq' );
-				$API_ACCESS_KEY = 'AAAAFsI2Bao:APA91bEdwRXOAStM2a0qIcvVF3Q_8NzVP8ZH3E_mgw2JcEyt3cuWHM6S6DPneGfJ6BJzDR2DqFeG9v7fN6zlkp5uYr98gl_Sdrio7EJKUy56oWIaCQQsAV0MkmutChiZMzeoPlvFCUpq';
+				$API_ACCESS_KEY = 'AAAACKGZ1J0:APA91bGWBYlaXveaspMTAKGoesyGLddMZUfp_BGxnCEwGOC21vmRSpPv9NkN3O8Vcr5O_Z91Ve-wSS_1q2J4329KI2GHEffNJ_5DXlWegDTQCFaonYYetcbYPJnGB8MoG9do9PdoPvvc';
 				$registrationIds = $token_id;
 
 				// prep the bundle
@@ -1032,4 +1042,35 @@ class MasterMdl extends CI_Model {
         $this->db->where($where);
         $this->db->delete($table); 
     }
+
+    public function sendNotificationToAdmins($order_id, $order_number){
+        
+        //Send notification to every admin
+        $where_admins = array(
+            'l_delete' => 1,
+            'l_role' => "admin",
+            );
+        
+        $userAdmins = $this->MasterMdl->view_data("login", $where_admins);
+        $msg = "New order received - #".$order_number;
+        foreach ($userAdmins as $item) {
+            $notify_data = array(
+                'message' => $msg,
+                'order_id' =>  $order_id,
+                'assign_notification_id' =>  $item['l_id'],
+                );
+
+            $this->db->insert('order_notification', $notify_data);
+        }
+        
+        //Send notification to super admin
+        $notify_data = array(
+            'message' => $msg,
+            'order_id' =>  $order_id,
+            'assign_notification_id' =>  1,
+            );
+
+        $this->db->insert('order_notification', $notify_data);
+    }
+
 }

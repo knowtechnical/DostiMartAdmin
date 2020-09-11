@@ -3,10 +3,9 @@
             <div class="container-fluid" id="print_view">
                     <p>
                         <a class="btn btn-primary" href="<?= site_url(); ?>/order_print_view/<?= $this->uri->segment(2, 0); ?>">Print</a>
-                        
                         <?php if (isset($result[0]['ostatus']) && $result[0]['ostatus'] == 'In Process') { ?>
-                        <a   href="<?= site_url(); ?>/edit_order/<?= $this->uri->segment(2, 0); ?>" class="btn btn-info" >Add Product</a>
-                        <a class="btn btn-danger" href="<?= site_url(); ?>/cancel_order/<?= $this->uri->segment(2, 0); ?>"   onclick="return onDeleteItem()">Cancel Order</a>
+                            <a   href="<?= site_url(); ?>/edit_order/<?= $this->uri->segment(2, 0); ?>" class="btn btn-info" >Add Product</a>
+                            <a class="btn btn-danger" href="<?= site_url(); ?>/cancel_order/<?= $this->uri->segment(2, 0); ?>"   onclick="return onDeleteItem()">Cancel Order</a>
                         <?php } ?>
                     </p>
             </div>
@@ -54,7 +53,7 @@
                                 <td><?php if (isset($result[0]['house_no'])) 
                                                 echo $result[0]['house_no']." ".$result[0]['street_address'].", ".$result[0]['apartment_name'].", ".$result[0]['landmark'].", ".$result[0]['pincode'].", ".$result[0]['city']
                                     ?>                
-                                </td> 
+                                </td>
                             </tr>
                                         
                             
@@ -92,7 +91,7 @@
                                                     <td> <?=  $value['discount_amount']; ?></td>       
                                                     <td> <?=  $value['item_total_amount']; ?></td> 
                                                     <td> 
-                                                        <?php if($value['active'] == '1' &&  $result[0]['ostatus'] == 'In Progress') { ?>
+                                                        <?php if($value['active'] == '1' &&  $result[0]['ostatus'] == 'In Process') { ?>
                                                             <a href="<?= site_url(); ?>/delete_order_item/<?= $value['order_item_id']; ?>"  class="btn btn-danger" name="remove<?= $count?>" id="remove<?= $count?>" onclick="return onDeleteItem()" >Delete</a>
                                                         <?php } ?>
                                                     </td>   
