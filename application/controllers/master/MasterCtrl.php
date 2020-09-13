@@ -1298,7 +1298,15 @@ class MasterCtrl extends CI_Controller {
                     $fk_shop_id = $inventoryResult[0]["fk_shop_id"];
                     $fk_zone_id = $inventoryResult[0]["fk_zone_id"];
                     $fk_category_id = $inventoryResult[0]["fk_category_id"];
-        
+
+                    $mrp_rate = $inventoryResult[0]["p_market_amount"];
+                    $buying_rate = $inventoryResult[0]["p_buying_amount"];
+                    $discount_rate = $inventoryResult[0]["discount_rate"];
+                    $selling_rate = $inventoryResult[0]["p_amount"];
+                    $profit_margin = $inventoryResult[0]["profile_margin"];
+                    $admin_profile = $inventoryResult[0]["p_admin_profit"];
+                    $user_profit = $inventoryResult[0]["p_user_profit"];
+
                     // order items total amount
                     $item_total_amount = $userQuantity * $p_amount;
                     
@@ -1313,7 +1321,15 @@ class MasterCtrl extends CI_Controller {
                         'order_id' => $order_id,
                         'zone_id' => $fk_zone_id,
                         'shop_id' => $fk_shop_id,
-                        'category_id' => $fk_category_id,  
+                        'category_id' => $fk_category_id, 
+                        
+                        'mrp_rate' => $mrp_rate,
+                        'buying_rate' => $buying_rate,  
+                        'discount_rate' => $discount_rate,  
+                        'selling_rate' => $selling_rate,  
+                        'profit_margin' => $profit_margin,  
+                        'admin_profile' => $admin_profile,  
+                        'user_profit' => $user_profit,  
                         );
                     
                     $orderItemResult = $this->db->insert('order_items', $order_item_data);
@@ -1550,6 +1566,14 @@ class MasterCtrl extends CI_Controller {
                     $fk_zone_id = $inventoryResult[0]["fk_zone_id"];
                     $fk_category_id = $inventoryResult[0]["fk_category_id"];
         
+                    $mrp_rate = $inventoryResult[0]["p_market_amount"];
+                    $buying_rate = $inventoryResult[0]["p_buying_amount"];
+                    $discount_rate = $inventoryResult[0]["discount_rate"];
+                    $selling_rate = $inventoryResult[0]["p_amount"];
+                    $profit_margin = $inventoryResult[0]["profile_margin"];
+                    $admin_profile = $inventoryResult[0]["p_admin_profit"];
+                    $user_profit = $inventoryResult[0]["p_user_profit"];
+	
                     // order items total amount
                     $item_total_amount = $userQuantity * $p_amount;
                     
@@ -1564,7 +1588,15 @@ class MasterCtrl extends CI_Controller {
                         'order_id' => $order_id,
                         'zone_id' => $fk_zone_id,
                         'shop_id' => $fk_shop_id,
-                        'category_id' => $fk_category_id,  
+                        'category_id' => $fk_category_id, 
+                        
+                        'mrp_rate' => $mrp_rate,
+                        'buying_rate' => $buying_rate,  
+                        'discount_rate' => $discount_rate,  
+                        'selling_rate' => $selling_rate,  
+                        'profit_margin' => $profit_margin,  
+                        'admin_profile' => $admin_profile,  
+                        'user_profit' => $user_profit,  
                         );
                     
                     $orderItemResult = $this->db->insert('order_items', $order_item_data);
