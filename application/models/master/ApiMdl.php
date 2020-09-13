@@ -168,7 +168,26 @@ class ApiMdl extends CI_Model {
             }
         }
 
+        public function view_data($table, $where) {
+            $this->db->select('*');
+            $this->db->from($table);     
+            $this->db->where($where);             
+            $result = $this->db->get()->result_array();        
+            
+            return $result;
+        }
 
+
+        public function update_table($where,$form_data, $table_name) {
+            $this->db->where($where);
+            $result = $this->db->update($table_name, $form_data);
+            //echo $this->db->last_query();exit; 	
+            if ($result) {
+                return $result;
+            } else {
+                return false;
+            }
+        }
 
         // public function login($where){
         //     $this->db->select('*');
