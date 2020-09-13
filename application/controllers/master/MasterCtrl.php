@@ -338,6 +338,7 @@ class MasterCtrl extends CI_Controller {
             'discount_rate' => $this->input->post('discount_rate'),
             'gstin' => $this->input->post('gstin'),
             'p_description' => $this->input->post('p_description'),
+            'keywords' => $this->input->post('keywords'),
             'p_thumbnail' => $this->upload_singleimage('Uploads/product_image','p_thumbnail'),
             //'p_description'=>$this->upload_singleimage($uploadpath,$image_name),
                 );
@@ -1081,7 +1082,7 @@ class MasterCtrl extends CI_Controller {
                     'ostatus' => $row['order_status'],
                     'active' => $row['active'],
                     'order_number' => $row['order_number'],
-                    
+                    'notes' => $row['notes'],
                     'city' => $row['city'],
                     'house_no' => $row['house_no'],
                     'street_address' => $row['street_address'],
@@ -1089,7 +1090,7 @@ class MasterCtrl extends CI_Controller {
                     'landmark' => $row['landmark'],
                     'pincode' => $row['pincode'],
                     'brand_name' => $product[0]['brand_name'],
-                
+                    'p_quantity_description' => $product[0]['p_quantity_description'],
                     'check_number_of_product' => $index,	
 					 );					 
                      $index++;           

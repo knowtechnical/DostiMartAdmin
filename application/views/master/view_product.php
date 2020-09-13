@@ -57,7 +57,7 @@
                     <td><?=  $count ?></td>
                     <td> <?=  $value['c_name']; ?></td>
                     <td> <?=  $value['s_name']; ?></td>
-                    <td>  <?= " ".$value['p_name']." (".$value['brand_name'].") "; ?></td>  
+                    <td>  <?= " ".$value['p_name']." (".$value['brand_name'].") - ".$value['p_quantity_description']; ?></td>  
                     <td> <?=  $value['p_market_amount']; ?></td>                                              
                     <td> <?=  $value['p_amount']; ?></td>
                      <?php  

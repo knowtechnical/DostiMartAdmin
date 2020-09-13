@@ -291,7 +291,9 @@ function onAddProduct() {
         name = myObj.data[j].p_name + ' - '+myObj.data[j].p_quantity_description+' ('+myObj.data[j].brand_name+')';
         add_quantity = $('#add_quantity').val();
         subTotal = parseFloat(add_quantity)*parseFloat(jsonObj.data[j].price);
-        $('#add_row').append('<tr id="row'+counter+'"><td>'+counter+'</td> '+
+
+        siteUrl = "<?php echo base_url() ?>"
+        $('#add_row').append('<tr id="row'+counter+'"><td style="width:150px;"><img src="'+siteUrl+myObj.data[j].p_thumbnail+'" width=150 /></td> '+
                                     '<td>'+name+'</td> '+
                                     '<td><input type="text" class="quantity" name="quantity'+counter+'" onkeyup="return onUpdateItemQty(this.value,'+counter+','+jsonObj.data[j].price+')" id="quantity'+counter+'" value="'+add_quantity+'" /></td> '+
                                     '<td>'+jsonObj.data[j].price+'</td> '+

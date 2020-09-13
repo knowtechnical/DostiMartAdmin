@@ -704,7 +704,8 @@ class MasterMdl extends CI_Model {
         $this->db->select('o.*,i.*, o.order_number as ordernumber, o.customer_name as l_name, o.customer_mobile as l_mobile, o.customer_address as l_address');
         $this->db->from('orders o'); 
         $this->db->join('order_items i', 'i.order_id = o.id');
-        $this->db->where($where);     
+        $this->db->where($where);  
+        $this->db->order_by('i.shop_id', 'ASC');    
         $result = $this->db->get()->result_array();     
         return $result;
     }

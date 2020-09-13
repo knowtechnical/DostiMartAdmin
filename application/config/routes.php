@@ -125,6 +125,13 @@ $route['order_print_view/:any'] = "master/MasterCtrl/order_print_view";
 $route['view_pushnotification'] = "master/MasterCtrl/view_pushnotification";
 $route['change_status'] = "master/MasterCtrl/change_status";
 
+$route['view_purchase'] = "master/PurchaseEntryCtrl/view_purchase";
+$route['add_purchase'] = "master/PurchaseEntryCtrl/add_purchase";
+$route['edit_purchase/:any'] = "master/PurchaseEntryCtrl/edit_purchase";
+$route['deletePurchaseItem/:any'] = "master/PurchaseEntryCtrl/deletePurchaseItem";
+
+$route['add_supplier'] = "master/PurchaseEntryCtrl/add_supplier";
+
 ////////////// STRAT API ROUTES   ///////////////////////////
 $route['api_login'] = "master/ApiCtrl/api_login";
 $route['api_fetchProductsByName'] = "master/ApiCtrl/api_fetchProductsByName";
@@ -141,6 +148,9 @@ $route['api_insert_order'] = "master/ApiCtrl/api_insert_order";
 $route['api_signup_user'] = "master/ApiCtrl/api_signup_user";
 $route['api_login_user'] = "master/ApiCtrl/api_login_user";
 $route['api_fetchProductsByBrandName'] = "master/ApiCtrl/api_fetchProductsByBrandName";
+$route['api_fetchAllProducts'] = "master/ApiCtrl/api_fetchAllProducts";
+$route['api_getSupplierById'] = "master/ApiCtrl/api_getSupplierById";
+$route['api_updateOrderDetails'] = "master/ApiCtrl/api_updateOrderDetails";
 ////////////// STRAT API ROUTES   ///////////////////////////
 
 
