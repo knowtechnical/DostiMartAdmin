@@ -28,12 +28,12 @@
 											<label class="login2 pull-right pull-right-pro" for="customer_name">Customer Name</label>
 										</div>
 										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-											<input type="text" id="customer_name" name="customer_name" class="form-control validate[required] text-input" autocomplete="off" value="<?php if (isset($row['customer_name'])) echo $row['customer_name'] ?>" /> </div>
+											<input type="text" id="customer_name" name="customer_name" class="form-control validate[required] text-input" autocomplete="off" value="Walk In" /> </div>
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
 											<label class="login2 pull-right pull-right-pro" for="l_mobile">Customer Mobile</label>
 										</div>
 										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-											<input type="text" id="customer_mobile" name="customer_mobile" class="form-control validate[required] text-input" autocomplete="off" value="<?php if (isset($row['customer_mobile'])) echo $row['customer_mobile'] ?>" /> </div>
+											<input type="text" id="customer_mobile" name="customer_mobile" class="form-control validate[required] text-input" autocomplete="off" value="9422917079" /> </div>
 									</div>
 								</div>
 
@@ -43,13 +43,13 @@
 											<label class="login2 pull-right pull-right-pro" for="customer_address">Customer Address</label>
 										</div>
 										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-											<input type="text" id="customer_address" name="customer_address" class="form-control validate[required] text-input" placeholder="Customer Address"  value="<?php if (isset($row['customer_address'])) echo $row['customer_address'] ?>" /> 
+											<input type="text" id="customer_address" name="customer_address" class="form-control validate[required] text-input" placeholder="Customer Address"  value="801 Yasrab Society, Inayat Nagar, Near star water plant, 431401, Parbhani" /> 
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
 											<label class="login2 pull-right pull-right-pro" for="l_mobile">Pick Up</label>
 										</div>
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                        <input type="checkbox" name="pickup" id="pickup" value="PickUp" style="height:30px;width:30px;" <?php if (isset($row['pickup']) && $row['pickup'] == "PickUp"){ echo 'checked';} ?> /> 
+                        <input type="checkbox" name="pickup" id="pickup" value="PickUp" style="height:30px;width:30px;" onchange="calculateTotal();" <?php if (isset($row['pickup']) && $row['pickup'] == "PickUp"){ echo 'checked';} ?> /> 
                     </div>
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 clearfix"> </div>
 									</div>
@@ -62,7 +62,7 @@
 											<label class="login2 pull-right pull-right-pro" for="a_name">Select Products</label>
 										</div>
 
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="display:none;">
                           <div class="autocomplete" >
                           <!-- <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product Name" autocomplete="off" />  -->
                             <select  id="brand_show"  style="width:270px; height:40px;" onchange="return onBrand(this.value);">
@@ -74,10 +74,10 @@
                           </div>
 	                  </div>
 
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"  id="product_div">
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12"  id="product_div">
                         
                           <!-- <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product Name" autocomplete="off" />  -->
-                            <select id="product_show" style="width:350px; height:40px;">
+                            <select id="product_show" class="form-control text-input">
                             </select>
            
 	                  </div>
@@ -98,6 +98,7 @@
                                                 <thead>
                                                     <tr>
                                                         <th>#No</th>
+                                                        <th>Img</th>
                                                         <th>Name</th>
                                                         <th>Quantity</th>
                                                         <th>Price</th>
@@ -131,9 +132,27 @@
                                                     </tr>
                                                     <input type="hidden" value="active" name="active<?= $count?>" id="active<?= $count?>" />
                                                 <?php $count++; } } ?>
+                                                   
                                                 </tbody>
                                             </table>
-                                            
+
+                                            <table class="table table-bordered">
+                                              <tbody>
+                                                    <tr>
+                                                      <th colspan=5>Delivery Charges(+)</th>
+                                                      <td id="delivery_charge">0</td>
+                                                    </tr>
+                                                    <tr>
+                                                      <th colspan=5>PickUp Discount(-)</th>
+                                                      <td id="pick_up_discount_amount">0</td>
+                                                    </tr>
+                                                    <tr>
+                                                      <th colspan=5>Amount Payable</th>
+                                                      <td id="total_amount">0</td>
+                                                    </tr>
+                                                    </tbody>
+                                            </table>
+
 	                                    </div>
 									</div>
 								</div>
@@ -251,7 +270,10 @@ counter = <?php echo $count-1; ?>;
 productname = '';
 product_id = 0;
 var jsonObj;
+var data;
 
+var delivery_thresold = <?php echo $delivery_thresold; ?>;
+var delivery_charge = <?php echo $delivery_charge; ?>;
 /*An array containing all the country names in the world:*/
 var countries = [];
 
@@ -261,6 +283,8 @@ function onUpdateItemQty(value, index, unitPrice){
 
     subTotal = Math.round((subTotal + Number.EPSILON) * 100) / 100
     $('#item_amount'+index).html(subTotal);
+
+    calculateTotal();
 }
 
 function onDeleteItem(index){
@@ -269,6 +293,7 @@ function onDeleteItem(index){
         $('#active'+index).val('deleted');
         $('#row'+index).remove();
         actual_count = actual_count - 1;
+        calculateTotal();
   }
   return conf;
 
@@ -284,6 +309,8 @@ function onAddProduct() {
   
   if(!checkProductExists(selectedValue)){
 
+    myObj  = JSON.parse(data)
+    jsonObj = myObj
     for (j = 0; j < jsonObj.data.length; ++j) {
         if(selectedValue == jsonObj.data[j].p_id) {
         counter = counter + 1;
@@ -291,7 +318,9 @@ function onAddProduct() {
         name = myObj.data[j].p_name + ' - '+myObj.data[j].p_quantity_description+' ('+myObj.data[j].brand_name+')';
         add_quantity = $('#add_quantity').val();
         subTotal = parseFloat(add_quantity)*parseFloat(jsonObj.data[j].price);
-        $('#add_row').append('<tr id="row'+counter+'"><td>'+counter+'</td> '+
+
+        siteUrl = "<?php echo base_url() ?>"
+        $('#add_row').append('<tr id="row'+counter+'"><td>'+counter+'</td><td style="width:150px;"><img src="'+siteUrl+myObj.data[j].p_thumbnail+'" width=150 /></td>'+
                                     '<td>'+name+'</td> '+
                                     '<td><input type="text" class="quantity" name="quantity'+counter+'" onkeyup="return onUpdateItemQty(this.value,'+counter+','+jsonObj.data[j].price+')" id="quantity'+counter+'" value="'+add_quantity+'" /></td> '+
                                     '<td>'+jsonObj.data[j].price+'</td> '+
@@ -305,11 +334,12 @@ function onAddProduct() {
     }
   
       $('#total_count').val(counter);
+      calculateTotal();
     } else {
         alert('Item already exists in the list');
     }
   
-  $("#brand_show").focus();
+  $("#product_show").focus();
   //$('#myInput').val('');
   //$('#myInput').focus();
   return false;
@@ -371,6 +401,28 @@ function onPlaceOrder(){
     return false;
 }
 
+function calculateTotal(){
+    total = 0;
+    for(k = 1; k <= counter; k++){
+        if($('#active'+k).val() == 'active'){
+            total = total + parseFloat($('#item_amount'+k).html()); 
+        }
+    }
+    delivery_charge_shw = total >= delivery_thresold || $('#pickup').is(":checked") ? 0 : delivery_charge;
+    total = total + delivery_charge_shw;
+
+    pickup_discount = $('#pickup').is(":checked") ? 0.02*total : 0;
+    total = total - pickup_discount;
+
+    total = Math.round((total + Number.EPSILON) * 100) / 100
+    pickup_discount = Math.round((pickup_discount + Number.EPSILON) * 100) / 100
+    delivery_charge_shw = Math.round((delivery_charge_shw + Number.EPSILON) * 100) / 100
+    //alert(delivery_charge_shw + ' '+pickup_discount+' '+total+' '+$('#pickup').is(":checked"));
+    $('#total_amount').html(total) 
+    $('#pick_up_discount_amount').html(pickup_discount)
+    $('#delivery_charge').html(delivery_charge_shw);
+}
+
 jQuery.browser = {};
 (function () {
     jQuery.browser.msie = false;
@@ -388,6 +440,27 @@ $(document).ready(function() {
       $("#product_div div input").focus(function(){
         $("#product_div div input").val('');
       });
+
+      $.ajax({
+            type: "post",
+            url: "<?php echo site_url('/api_fetchAllProducts') ?>",
+            data: {},
+            datatype: "text",
+            success: function(response) {
+                data = response;
+                
+                j = 0;
+                html = '';
+                xyObj  = JSON.parse(data)
+                for (j = 0; j < xyObj.data.length; ++j) {
+                        product_name = xyObj.data[j].p_name + ' - '+xyObj.data[j].p_quantity_description+' '+' ('+xyObj.data[j].brand_name+') '+'- MRP: '+xyObj.data[j].p_market_amount;
+                        html = html + '<option value="'+xyObj.data[j].p_id+'"> '+product_name+' </option>';
+                }
+
+                $('#product_show').html(html);
+
+            }
+    });
 });
 	
 </script>

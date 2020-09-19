@@ -43,13 +43,13 @@
 											<label class="login2 pull-right pull-right-pro" for="customer_address">Customer Address</label>
 										</div>
 										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-											<input type="text" id="customer_address" name="customer_address" class="form-control validate[required] text-input" placeholder="Customer Address"  value="<?php if (isset($row['customer_address'])) echo $row['customer_address'] ?>" /> 
+											<input type="text" id="customer_address" name="customer_address" class="form-control validate[required] text-input" placeholder="Customer Address"  value="801 Yasrab Society, Inayat Nagar, Near star water plant, 431401, Parbhani" /> 
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
 											<label class="login2 pull-right pull-right-pro" for="l_mobile">Pick Up</label>
 										</div>
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                        <input type="checkbox" name="pickup" id="pickup" value="PickUp" style="height:30px;width:30px;" <?php if (isset($row['delivery_mode']) && $row['delivery_mode'] == "PickUp"){ echo 'checked';} ?> /> 
+                        <input type="checkbox" name="pickup" id="pickup" value="PickUp" onchange="calculateTotal();" style="height:30px;width:30px;" <?php if (isset($row['delivery_mode']) && $row['delivery_mode'] == "PickUp"){ echo 'checked';} ?> /> 
                     </div>
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 clearfix"> </div>
 									</div>
@@ -62,7 +62,7 @@
 											<label class="login2 pull-right pull-right-pro" for="a_name">Select Products</label>
 										</div>
 
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="display:none;">
                           <div class="autocomplete" >
                           <!-- <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product Name" autocomplete="off" />  -->
                             <select  id="brand_show"  style="width:270px; height:40px;" onchange="return onBrand(this.value);">
@@ -74,10 +74,10 @@
                           </div>
 	                  </div>
 
-                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" id="product_div">
+                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12" id="product_div">
                         
                           <!-- <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product Name" autocomplete="off" />  -->
-                            <select id="product_show" style="width:350px; height:40px;">
+                            <select id="product_show" class="form-control text-input">
                             </select>
            
 	                  </div>
@@ -85,7 +85,7 @@
                         <input id="add_quantity" class="form-control" type="text" name="add_quantity" placeholder="Qty">
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                        <button id="add_button" class="form-control" type="text" id="add_button" name="add_button" onclick="return onAddProduct();" placeholder="Qty">Add</button>
+                        <button id="add_button" class="form-control" type="button" id="add_button" name="add_button" onclick="return onAddProduct();" placeholder="Qty">Add</button>
                     </div>
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 clearfix"> </div>
 									</div>
@@ -94,6 +94,34 @@
                                 <div class="form-group-inner">
 									<div class="row">
 										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+											<table class="table table-bordered">
+												<?php $count = 0; if(isset($order_items)){
+                                                          $exist_count = 1;
+                                                          foreach ($order_items as $value) {
+                                                ?>
+                                                    <tr id="erow<?=  $exist_count; ?>">
+                                                        <td><?= $exist_count?></td>
+                                                        <td> 
+                                                            <?=  $value['product_name'] ?>
+                                                            
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" class="quantity" name="equantity<?=  $exist_count; ?>"  id="equantity<?= $exist_count?>" value="<?= $value['quantity']?>" disabled/>
+                                                        </td>
+                                                        <td><?= $value['amount'] ?></td>
+                                                        <td>
+                                                            <span name="eitem_amount<?= $exist_count?>" id="eitem_amount<?= $exist_count?>" ><?= $value['item_total_amount']?></span>
+                                                        </td>
+                                                        <td>
+                                                            
+                                                            <input type="hidden" value="<?=  $value['product_id']; ?>" name="eadded_product<?= $exist_count?>" id="eadded_product<?= $exist_count?>" />
+                                                            
+                                                        </td>
+                                                    </tr>
+                                                    <input type="hidden" value="active" name="eactive<?= $exist_count?>" id="eactive<?= $exist_count?>" />
+                                                <?php $exist_count++; } } ?>
+											</table>
                                             <table class="table table-bordered">
                                                 <thead>
                                                     <tr>
@@ -134,6 +162,23 @@
                                                 </tbody>
                                             </table>
                                             
+                                            <table class="table table-bordered">
+                                              <tbody>
+                                                    <tr>
+                                                      <th colspan=5>Delivery Charges(+)</th>
+                                                      <td id="delivery_charge">0</td>
+                                                    </tr>
+                                                    <tr>
+                                                      <th colspan=5>PickUp Discount(-)</th>
+                                                      <td id="pick_up_discount_amount">0</td>
+                                                    </tr>
+                                                    <tr>
+                                                      <th colspan=5>Amount Payable</th>
+                                                      <td id="total_amount">0</td>
+                                                    </tr>
+                                                    </tbody>
+                                            </table>
+
 	                                    </div>
 									</div>
 								</div>
@@ -248,12 +293,15 @@ function deleteimg(id) {
 <script>
 actual_count = <?php echo $count-1; ?>;
 counter = <?php echo $count-1; ?>;
+count_edit = <?php echo $exist_count-1; ?>;
 productname = '';
 product_id = 0;
 var jsonObj;
-
+var data;
 /*An array containing all the country names in the world:*/
 var countries = [];
+var delivery_thresold = <?php echo $delivery_thresold; ?>;
+var delivery_charge = <?php echo $delivery_charge; ?>;
 
 
 function onUpdateItemQty(value, index, unitPrice){
@@ -261,6 +309,7 @@ function onUpdateItemQty(value, index, unitPrice){
 
     subTotal = Math.round((subTotal + Number.EPSILON) * 100) / 100
     $('#item_amount'+index).html(subTotal);
+    calculateTotal();
 }
 
 function onDeleteItem(index){
@@ -269,6 +318,8 @@ function onDeleteItem(index){
         $('#active'+index).val('deleted');
         $('#row'+index).remove();
         actual_count = actual_count - 1;
+        calculateTotal();
+        return false;
   }
   return conf;
 
@@ -284,6 +335,8 @@ function onAddProduct() {
   
   if(!checkProductExists(selectedValue)){
 
+    myObj  = JSON.parse(data)
+    jsonObj = myObj
     for (j = 0; j < jsonObj.data.length; ++j) {
         if(selectedValue == jsonObj.data[j].p_id) {
         counter = counter + 1;
@@ -302,7 +355,7 @@ function onAddProduct() {
                                     '<input type="hidden" value="'+jsonObj.data[j].p_id+'" name="added_product'+counter+'" id="added_product'+counter+'" />'+
                                     '</td></tr>');
             $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />')
-        
+            calculateTotal();
         }
     }
   
@@ -311,7 +364,7 @@ function onAddProduct() {
         alert('Item already exists in the list');
     }
   
-  $("#brand_show").focus();
+  $("#product_show").focus();
   //$('#myInput').val('');
   //$('#myInput').focus();
   return false;
@@ -326,6 +379,13 @@ function checkProductExists(id) {
         }
     }
 
+    for(k = 1; k <= count_edit; k++){
+        if($('#eactive'+k).val() == 'active' && $('#eadded_product'+k).val() == id){
+            productExists = true;
+            break;
+        }
+    }
+  
     return productExists;
 }
 
@@ -360,6 +420,35 @@ function onBrand(brandName){
   return true;
 }
 
+function calculateTotal(){
+    total = 0;
+    for(k = 1; k <= counter; k++){
+        if($('#active'+k).val() == 'active'){
+            total = total + parseFloat($('#item_amount'+k).html()); 
+        }
+    }
+
+    for(k = 1; k <= count_edit; k++){
+        if($('#eactive'+k).val() == 'active'){
+            total = total + parseFloat($('#eitem_amount'+k).html()); 
+        }
+    }
+  
+    delivery_charge_shw = total >= delivery_thresold || $('#pickup').is(":checked") ? 0 : delivery_charge;
+    total = total + delivery_charge_shw;
+
+    pickup_discount = $('#pickup').is(":checked") ? 0.02*total : 0;
+    total = total - pickup_discount;
+
+    total = Math.round((total + Number.EPSILON) * 100) / 100
+    pickup_discount = Math.round((pickup_discount + Number.EPSILON) * 100) / 100
+    delivery_charge_shw = Math.round((delivery_charge_shw + Number.EPSILON) * 100) / 100
+    //alert(delivery_charge_shw + ' '+pickup_discount+' '+total+' '+$('#pickup').is(":checked"));
+    $('#total_amount').html(total) 
+    $('#pick_up_discount_amount').html(pickup_discount)
+    $('#delivery_charge').html(delivery_charge_shw);
+}
+
 function onPlaceOrder(){
     conf = confirm("Are you sure , you want to place order?");
     if(conf) {
@@ -390,6 +479,28 @@ $(document).ready(function() {
       $("#product_div div input").focus(function(){
         $("#product_div div input").val('');
       });
+
+      calculateTotal();
+      $.ajax({
+            type: "post",
+            url: "<?php echo site_url('/api_fetchAllProducts') ?>",
+            data: {},
+            datatype: "text",
+            success: function(response) {
+                data = response;
+                
+                j = 0;
+                html = '';
+                xyObj  = JSON.parse(data)
+                for (j = 0; j < xyObj.data.length; ++j) {
+                        product_name = xyObj.data[j].p_name + ' - '+xyObj.data[j].p_quantity_description+' '+' ('+xyObj.data[j].brand_name+') '+'- MRP: '+xyObj.data[j].p_market_amount;
+                        html = html + '<option value="'+xyObj.data[j].p_id+'"> '+product_name+' </option>';
+                }
+
+                $('#product_show').html(html);
+
+            }
+    });
 });
 	
 </script>

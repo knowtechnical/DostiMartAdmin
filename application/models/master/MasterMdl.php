@@ -372,7 +372,6 @@ class MasterMdl extends CI_Model {
     public function get_order($id){
         $this->db->select('*');
         $this->db->from('orders s'); 
-        $this->db->join('login l', 'l.l_mobile = s.customer_mobile');
         $this->db->where('id',$id);             
         $result = $this->db->get()->result_array();        
         if (!empty($result)) {

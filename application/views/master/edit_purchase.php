@@ -77,6 +77,20 @@ if (isset($purchaseResults["bill_date"]))
                                 </div>
                             </div>
                         </div>
+
+                        <div class="form-group-inner">
+                            <div class="row">
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                    <label class="login2 pull-right pull-right-pro" for="purchase_total">Purchase Total</label>
+                                </div>
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                    <input type="text" id="purchase_total" name="purchase_total" class="form-control validate[required] text-input "  autocomplete="off"  disabled /> 
+                                </div>
+                                
+                              
+                            </div>
+                        </div>
+
                         <hr>
                         <div class="form-group-inner">
                             <div class="row">
@@ -85,7 +99,7 @@ if (isset($purchaseResults["bill_date"]))
                                 </div>
 
                                 <!-- Brand List -->
-                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="display:none;">
                                     <select id="brand_show" name="brand_show" class="form-control text-input" onchange="return onBrand(this.value);">
                                         <option value=''>Select All</option>
                                         <?php  foreach ($brandNames as $item) { ?>
@@ -95,7 +109,7 @@ if (isset($purchaseResults["bill_date"]))
                                 </div>
 
                                 <!-- Product List -->
-                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" id="product_div">
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12" id="product_div">
                                     <select id="product_show" name="product_show" class="form-control validate[required] text-input">
                                     </select>
                                 </div>
@@ -372,6 +386,7 @@ product_id = 0;
 edit_counter = <?= $count ?>;
 var jsonObj;
 var data;
+purchase_total = 0;
 
 function onBrand(brandName){
     //alert(brandName);
@@ -431,7 +446,7 @@ function onAddProduct() {
                                     '<td><input type="text" class="quantity" name="discount_rate'+counter+'" id="discount_rate'+counter+'" value="'+myObj.data[j].discount_rate+'" onkeyup="return onUpdateItem('+counter+');" /></td> '+
                                     '<td><input type="text" class="quantity" name="selling_price'+counter+'" id="selling_price'+counter+'" value="'+myObj.data[j].price+'"  /></td> '+
                                     '<td><input type="text" class="quantity" name="profit_margin'+counter+'" id="profit_margin'+counter+'" value="'+myObj.data[j].profile_margin+'" /></td> '+
-                                    '<td><input type="text" class="quantity" name="purchase_qty'+counter+'" id="purchase_qty'+counter+'" value="'+add_quantity+'"  /></td> '+
+                                    '<td><input type="text" class="quantity" name="purchase_qty'+counter+'" id="purchase_qty'+counter+'" value="'+add_quantity+'" onkeyup="return calculatePurchaseTotal();"  /></td> '+
                                     '<td><input type="text" class="quantity" name="stock_quantity'+counter+'"  id="quantity'+counter+'" value="'+jsonObj.data[j].p_quantity+'" disabled /></td> '+
                                     '<td><button class="btn btn-danger" name="remove'+counter+'" id="reomve'+counter+'" onclick="return onDeleteItem('+counter+')" >Delete</button>'+
                                     '<input type="hidden" value="'+jsonObj.data[j].p_id+'" name="added_product'+counter+'" id="added_product'+counter+'" />'+
@@ -439,7 +454,8 @@ function onAddProduct() {
                                     '<input type="hidden" value="'+jsonObj.data[j].p_user_profit+'" name="p_user_profit'+counter+'" id="p_user_profit'+counter+'" />'+
                                     '</td></tr>'
             $('#add_row').append(tr);
-            $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />')
+            $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />');
+            calculatePurchaseTotal();
         
         }
     }
@@ -449,7 +465,7 @@ function onAddProduct() {
         alert('Item already exists in the list');
     }
   
-  $("#brand_show").focus();
+  $("#product_show").focus();
   //$('#myInput').val('');
   //$('#myInput').focus();
   return false;
@@ -461,6 +477,8 @@ function onDeleteItem(index){
         $('#active'+index).val('deleted');
         $('#row'+index).remove();
         actual_count = actual_count - 1;
+
+        calculatePurchaseTotal();
   }
   return conf;
 
@@ -538,7 +556,7 @@ $(document).ready(function() {
                 html = '';
                 xyObj  = JSON.parse(data)
                 for (j = 0; j < xyObj.data.length; ++j) {
-                        product_name = xyObj.data[j].p_name + ' - '+xyObj.data[j].p_quantity_description+' - MRP: '+xyObj.data[j].p_market_amount;
+                        product_name = xyObj.data[j].p_name + ' - '+xyObj.data[j].p_quantity_description+' '+' ('+xyObj.data[j].brand_name+') '+'- MRP: '+xyObj.data[j].p_market_amount;
                         html = html + '<option value="'+xyObj.data[j].p_id+'"> '+product_name+' </option>';
                 }
 
@@ -547,6 +565,7 @@ $(document).ready(function() {
             }
     });
 
+   
     //   $("#product_div div input").focus(function(){
     //     $("#product_div div input").val('');
     //   });
@@ -566,6 +585,32 @@ function populateAllProducts(){
     select = $('#product_div div select:nth-child(2)');
     //alert(select.html())
     select.html(html);
+}
+
+jQuery(window).load(function () {
+    calculatePurchaseTotal();
+});
+function calculatePurchaseTotal(){
+
+    purchase_total = 0
+    for(k = 1; k <= counter; k++){
+        if(typeof $('#buying_rate'+k).val() != 'undefined' && typeof $('#purchase_qty'+k).val() != 'undefined'){
+            purchase_total = purchase_total + (parseFloat($('#buying_rate'+k).val()) * parseFloat($('#purchase_qty'+k).val()))
+        }
+    }
+
+    for(k = 0; k <= edit_counter; k++){
+        //
+        if(typeof $('#ebuying_rate'+k).val() != 'undefined' && typeof $('#epurchase_qty'+k).val() != 'undefined'){
+            purchase_total = purchase_total + (parseFloat($('#ebuying_rate'+k).val()) * parseFloat($('#epurchase_qty'+k).val()))
+        }
+    }
+
+    if(isNaN(purchase_total)) purchase_total = 0;
+
+    purchase_total = Math.round((purchase_total + Number.EPSILON) * 100) / 100
+    $("#purchase_total").val(purchase_total);
+
 }
 
 jQuery.browser = {};
