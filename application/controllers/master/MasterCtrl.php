@@ -1244,6 +1244,10 @@ class MasterCtrl extends CI_Controller {
 
             for($j = 1; $j <= $total_item_count; $j++){
  
+                $active = $_POST['active'.$j];
+                if($active == "deleted") 
+                    continue;
+
                 $product_id = $_POST['added_product'.$j];
                 $userquantity = $_POST['quantity'.$j];
                 $productResult = $this->MasterMdl->get_product($product_id); 
@@ -1369,7 +1373,19 @@ class MasterCtrl extends CI_Controller {
         $brandNames = $this->MasterMdl->getAllBrands($where);
         $data['brandNames'] = $brandNames;
 
-        //print_r($data);
+        $where = array('key'=>'delivery', 'delete'=>'1');
+        $order_delivery_charge_amount = floatval($this->MasterMdl->view_data('extras_content', $where)[0]['amount']);
+        $where = array('key'=>'delivery_thresold', 'delete'=>'1');
+        $delivery_thresold = floatval($this->MasterMdl->view_data('extras_content', $where)[0]['amount']);
+
+        $data['delivery_charge'] = $order_delivery_charge_amount;
+        $data['delivery_thresold'] = $delivery_thresold;
+
+        $where = array('id'=> $order_id);
+        $orders = $this->MasterMdl->view_orders_details_v2($where);
+        $data['order_items'] = $orders;
+
+        //print_r($data['order_items']);
         //$data['row_img'] = $this->MasterMdl->get_adimg($id);     
         //print_r($data['row']);exit;
         $this->load->view('master/edit_order', $data);
@@ -1626,6 +1642,15 @@ class MasterCtrl extends CI_Controller {
         $brandNames = $this->MasterMdl->getAllBrands($where);
         $data['brandNames'] = $brandNames;
         //print_r($data);
+
+        $where = array('key'=>'delivery', 'delete'=>'1');
+        $order_delivery_charge_amount = floatval($this->MasterMdl->view_data('extras_content', $where)[0]['amount']);
+        $where = array('key'=>'delivery_thresold', 'delete'=>'1');
+        $delivery_thresold = floatval($this->MasterMdl->view_data('extras_content', $where)[0]['amount']);
+
+        $data['delivery_charge'] = $order_delivery_charge_amount;
+        $data['delivery_thresold'] = $delivery_thresold;
+
         $this->load->view('master/add_order', $data);
     }
 

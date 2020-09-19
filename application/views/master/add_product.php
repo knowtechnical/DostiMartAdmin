@@ -19,8 +19,6 @@
 									</div>
 									<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
 										<select id="purchase_type" name="purchase_type" class="form-control validate[required] text-input">
-											<option value="">Select Type</option>
-											<option value='purchase'>Purchase</option>
 											<option value='update'>Master Update</option>
 										</select>
 									</div>
@@ -111,7 +109,7 @@
 											<input type="text" id="brand_name" name="brand_name" class="form-control" placeholder="Enter Brand Name" value="<?php if (isset($row['brand_name'])) echo $row['brand_name'] ?>" /> </div>
 									</div>
 								</div>
-								<div class="form-group-inner">
+								<div class="form-group-inner" style="display:none;">
 									<div class="row">
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
 											<label class="login2 pull-right pull-right-pro" for="brand_name">Invoice No.</label>

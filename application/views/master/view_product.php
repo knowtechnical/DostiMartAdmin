@@ -79,10 +79,13 @@
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                             </button>
                         </a>
-                         <a onclick="return deleterow(<?= $value['p_id']; ?>);">
-                            <button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true" ></i></button>
+                         
+                    <?php } ?>
+                    <?php if($_SESSION['all']['l_role'] == 'superadmin'){?>   
+                        <a onclick="return deleterow(<?= $value['p_id']; ?>);">
+                                <button data-toggle="tooltip" title="Trash" class="pd-setting-ed"><i class="fa fa-trash-o" aria-hidden="true" ></i></button>
                         </a>
-                <?php } ?>
+                    <?php } ?>
                  </td>
                 
                 </tr>

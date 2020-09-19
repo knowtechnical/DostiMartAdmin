@@ -74,7 +74,7 @@
                     <td> <?=  $value['order_number']; ?></td>
                     <td> <?=  $value['l_name']; ?></td>
                     <td> <?=  $value['customer_mobile']; ?></td>
-                    <td> <?=  $value['order_total_amount']; ?></td>
+                    <td> <?=  number_format((float)$value['order_total_amount'], 2, '.', ''); ?></td>
                     <td> <?=  $value['items']; ?></td>
                     <td> <?php echo $value['order_status']; ?></td>                   
                     <td>
