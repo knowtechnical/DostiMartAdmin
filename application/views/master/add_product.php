@@ -86,7 +86,7 @@
 											<label class="login2 pull-right pull-right-pro" for="keywords">Keywords (Easty to find by user)</label>
 										</div>
 										<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-											<input type="text" id="keywords" name="keywords" class="form-control" placeholder="Keywords to recognize" value="<?php if (isset($row['keywords'])) echo $row['keywords'] ?>"  />
+											<input type="text" id="keywords" name="keywords" class="form-control" placeholder="Enter keywords to recognize" value=""  />
 										</div>
 									</div>
 								</div>

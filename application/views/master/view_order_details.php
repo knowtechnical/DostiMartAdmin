@@ -55,12 +55,13 @@
                                     ?>                
                                 </td>
                             </tr>
-                            <tr>
+                             <tr>
                                 <td ><strong>Notes</strong></td>
                                 <td> 
                                     <input type="text" name="notes" id="notes" class="form-control" value="<?php if (isset($result[0]['notes'])) echo $result[0]['notes']; ?>" onchange="return saveNotes(this.value);" />
                                 </td>
-                            </tr>    
+                            </tr>  
+                                        
                             
                             </tbody>
                          </table>
@@ -76,12 +77,14 @@
                                     <th>Quantity</th>
                                     <th>MRP</th>
                                     <th>Discount</th>
+                                    <th>Adm Profit</th>
                                     <th>Price</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php   $totalamountoffer= 0;
+                                        $total_profit = 0;
                                         $totalamount=0; 
                                         if(isset($result)){
                                             $count = 1;
@@ -90,12 +93,13 @@
                                 ?>
                                 
                                                 <tr>
-                                                    <td> <?=  $count; ?></td>   
-                                                    <td style="width: 150px;"> <img src="<?php echo base_url().$value['p_thumbnail'];?>" width="150" /></td>   
-                                                    <td> <?= " ".$value['product_name']." - ".$value['p_quantity_description']."<strong> (".$value['brand_name'].")</strong>  "; ?></td>                                           
+                                                    <td> <?=  $count; ?></td>
+                                                    <td style="width: 150px;"> <img src="<?php echo base_url().$value['p_thumbnail'];?>" width="150" /></td>
+                                                    <td> <?= " ".$value['product_name']." - ".$value['p_quantity_description']."<strong> (".$value['brand_name'].")</strong>  "; ?></td>              
                                                     <td> <?=  $value['p_quantity']; ?></td>
                                                     <td> <?=  $value['mrp']; ?></td>
-                                                    <td> <?=  $value['discount_amount']; ?></td>       
+                                                    <td> <?=  $value['discount_amount']; ?></td>  
+                                                    <td> <?=  $value['admin_profit']; ?></td>
                                                     <td> <?=  $value['item_total_amount']; ?></td> 
                                                     <td> 
                                                         <?php if($value['active'] == '1' &&  $result[0]['ostatus'] == 'In Process') { ?>
@@ -106,26 +110,31 @@
                                                 </tr>
         
                                 <?php           $count++;
+                                                $total_profit = $total_profit + $value['admin_profit'];
                                             }
                                         }
                                 ?>
                                 <tr>
-                                    <td colspan=6>Total Amount</td>
+                                    <td colspan=7>Total Amount</td>
                                     <td><?php if (isset($result[0]['order_items_total_amount'])) echo $result[0]['order_items_total_amount'] ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan=6>PickUp Discount</td>
+                                    <td colspan=7>PickUp Discount</td>
                                     <td><?php if (isset($result[0]['pickup_discount_amount'])) echo number_format((float)$result[0]['pickup_discount_amount'], 2, '.', ''); ?></td>
                                 </tr>
                                 <tr>
-                                    <td colspan=6>Delivery Charges</td>
+                                    <td colspan=7>Delivery Charges</td>
                                     <td><?php if (isset($result[0]['order_delivery_charge_amount'])) echo number_format((float)$result[0]['order_delivery_charge_amount'], 2, '.', ''); ?></td>
                                 </tr>
                                 <tr>
-                                        <td colspan=6><strong>Amount Payable</strong></td>
-                                        <td><strong><?php if (isset($result[0]['order_total_amount'])) echo number_format((float)$result[0]['order_total_amount'], 2, '.', ''); ?></strong></td>
+                                        <td colspan=7><strong>Amount Payable</strong></td>
+                                        <td><strong><?php if (isset($result[0]['order_total_amount'])) echo round($result[0]['order_total_amount']); ?></strong></td>
                                 </tr>
-                              
+                                <tr>
+                                        <td colspan=7><strong style='color:green'>Admin Profit</strong></td>
+                                        <td><strong  style='color:green'><?php echo number_format((float)$total_profit, 2, '.', ''); ?></strong></td>
+                                </tr>
+                                
                             </tbody>
                          </table>
 
@@ -268,7 +277,6 @@ jQuery(document).ready(function($) {
         
         return cs;
     }
-
     function saveNotes(notes){
         $.ajax({
             type: "post",
@@ -278,7 +286,7 @@ jQuery(document).ready(function($) {
             success: function(response) {
                 data = response;
             }
-    });
+        });
 
 
         return false;

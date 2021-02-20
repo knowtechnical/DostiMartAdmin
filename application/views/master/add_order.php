@@ -33,7 +33,7 @@
 											<label class="login2 pull-right pull-right-pro" for="l_mobile">Customer Mobile</label>
 										</div>
 										<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-											<input type="text" id="customer_mobile" name="customer_mobile" class="form-control validate[required] text-input" autocomplete="off" value="9422917079" /> </div>
+											<input type="text" id="customer_mobile" name="customer_mobile" class="form-control validate[required] text-input" autocomplete="off" value="9422917079"  /> </div>
 									</div>
 								</div>
 
@@ -49,7 +49,7 @@
 											<label class="login2 pull-right pull-right-pro" for="l_mobile">Pick Up</label>
 										</div>
                     <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                        <input type="checkbox" name="pickup" id="pickup" value="PickUp" style="height:30px;width:30px;" onchange="calculateTotal();" <?php if (isset($row['pickup']) && $row['pickup'] == "PickUp"){ echo 'checked';} ?> /> 
+                        <input type="checkbox" name="pickup" id="pickup" value="PickUp" onchange="calculateTotal();" style="height:30px;width:30px;" <?php if (isset($row['pickup']) && $row['pickup'] == "PickUp"){ echo 'checked';} ?> /> 
                     </div>
 										<div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 clearfix"> </div>
 									</div>
@@ -77,7 +77,7 @@
                     <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12"  id="product_div">
                         
                           <!-- <input type="text" id="product_name" name="product_name" class="form-control" placeholder="Product Name" autocomplete="off" />  -->
-                            <select id="product_show" class="form-control text-input">
+                            <select id="product_show"  class="form-control text-input">
                             </select>
            
 	                  </div>
@@ -132,11 +132,10 @@
                                                     </tr>
                                                     <input type="hidden" value="active" name="active<?= $count?>" id="active<?= $count?>" />
                                                 <?php $count++; } } ?>
-                                                   
                                                 </tbody>
                                             </table>
-
-                                            <table class="table table-bordered">
+                                            
+                                                                                  <table class="table table-bordered">
                                               <tbody>
                                                     <tr>
                                                       <th colspan=5>Delivery Charges(+)</th>
@@ -152,7 +151,7 @@
                                                     </tr>
                                                     </tbody>
                                             </table>
-
+                                            
 	                                    </div>
 									</div>
 								</div>
@@ -270,20 +269,20 @@ counter = <?php echo $count-1; ?>;
 productname = '';
 product_id = 0;
 var jsonObj;
+
+/*An array containing all the country names in the world:*/
+var countries = [];
 var data;
 
 var delivery_thresold = <?php echo $delivery_thresold; ?>;
 var delivery_charge = <?php echo $delivery_charge; ?>;
-/*An array containing all the country names in the world:*/
-var countries = [];
-
 
 function onUpdateItemQty(value, index, unitPrice){
     var subTotal = parseFloat(unitPrice)*value;
 
     subTotal = Math.round((subTotal + Number.EPSILON) * 100) / 100
     $('#item_amount'+index).html(subTotal);
-
+    
     calculateTotal();
 }
 
@@ -308,7 +307,6 @@ function onAddProduct() {
   }
   
   if(!checkProductExists(selectedValue)){
-
     myObj  = JSON.parse(data)
     jsonObj = myObj
     for (j = 0; j < jsonObj.data.length; ++j) {
@@ -329,12 +327,11 @@ function onAddProduct() {
                                     '<input type="hidden" value="'+jsonObj.data[j].p_id+'" name="added_product'+counter+'" id="added_product'+counter+'" />'+
                                     '</td></tr>');
             $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />')
-        
+            calculateTotal();
         }
     }
   
       $('#total_count').val(counter);
-      calculateTotal();
     } else {
         alert('Item already exists in the list');
     }
@@ -388,19 +385,6 @@ function onBrand(brandName){
   return true;
 }
 
-function onPlaceOrder(){
-    conf = confirm("Are you sure , you want to place order?");
-    if(conf) {
-            if(actual_count == 0){
-                alert('Please add items to place order');
-            } else {
-                return true;
-            }
-    }
-
-    return false;
-}
-
 function calculateTotal(){
     total = 0;
     for(k = 1; k <= counter; k++){
@@ -423,6 +407,20 @@ function calculateTotal(){
     $('#delivery_charge').html(delivery_charge_shw);
 }
 
+
+function onPlaceOrder(){
+    conf = confirm("Are you sure , you want to place order?");
+    if(conf) {
+            if(actual_count == 0){
+                alert('Please add items to place order');
+            } else {
+                return true;
+            }
+    }
+
+    return false;
+}
+
 jQuery.browser = {};
 (function () {
     jQuery.browser.msie = false;
@@ -440,8 +438,8 @@ $(document).ready(function() {
       $("#product_div div input").focus(function(){
         $("#product_div div input").val('');
       });
-
-      $.ajax({
+      
+            $.ajax({
             type: "post",
             url: "<?php echo site_url('/api_fetchAllProducts') ?>",
             data: {},
@@ -458,9 +456,11 @@ $(document).ready(function() {
                 }
 
                 $('#product_show').html(html);
-
+                $("#pickup").attr("checked", true);
+                calculateTotal();
             }
     });
+
 });
 	
 </script>

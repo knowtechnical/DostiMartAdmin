@@ -168,6 +168,7 @@ class ApiMdl extends CI_Model {
             }
         }
 
+
         public function view_data($table, $where) {
             $this->db->select('*');
             $this->db->from($table);     

@@ -1066,8 +1066,9 @@ class MasterCtrl extends CI_Controller {
                     'order_items_total_amount' => $row['order_items_total_amount'],
                     'pickup_discount_amount' => $row['pickup_discount_amount'],
                     'order_delivery_charge_amount' => $row['order_delivery_charge_amount'],
-                    'mrp' => $product[0]['p_market_amount'],
-                    'discount_amount' => $product[0]['p_user_profit'],
+                    'mrp' => $row['mrp_rate'],
+                    'discount_amount' => $row['discount_rate'],
+                    'admin_profit' => $row['admin_profile'],
                     'customer_mobile' => $row['customer_mobile'],
                     'delivery_mode' => $row['delivery_mode'],
                     'customer_address' => $row['customer_address'],
@@ -1125,6 +1126,7 @@ class MasterCtrl extends CI_Controller {
                 'customer_mobile' => $row['customer_mobile'],
                 'delivery_mode' => $row['delivery_mode'],
                 'customer_address' => $row['customer_address'],
+                'order_savings_amount' => $row['order_savings_amount'],
                 'p_description' => $product[0]['p_description'],
                 'p_thumbnail' => $product[0]['p_thumbnail'],
                 'o_overall_product_amount' => $row['order_total_amount'],
@@ -1136,7 +1138,6 @@ class MasterCtrl extends CI_Controller {
                 'ostatus' => $row['order_status'],
                 'active' => $row['active'],
                 'order_number' => $row['order_number'],
-
                 'city' => $row['city'],
                 'house_no' => $row['house_no'],
                 'street_address' => $row['street_address'],
@@ -1243,7 +1244,7 @@ class MasterCtrl extends CI_Controller {
             $order_total_amount = 0;
 
             for($j = 1; $j <= $total_item_count; $j++){
- 
+
                 $active = $_POST['active'.$j];
                 if($active == "deleted") 
                     continue;
@@ -1310,7 +1311,8 @@ class MasterCtrl extends CI_Controller {
                     $profit_margin = $inventoryResult[0]["profile_margin"];
                     $admin_profile = $inventoryResult[0]["p_admin_profit"];
                     $user_profit = $inventoryResult[0]["p_user_profit"];
-
+                    $p_thumbnail = $inventoryResult[0]["p_thumbnail"];
+                    $brand_name = $inventoryResult[0]["brand_name"];
                     // order items total amount
                     $item_total_amount = $userQuantity * $p_amount;
                     
@@ -1325,7 +1327,7 @@ class MasterCtrl extends CI_Controller {
                         'order_id' => $order_id,
                         'zone_id' => $fk_zone_id,
                         'shop_id' => $fk_shop_id,
-                        'category_id' => $fk_category_id, 
+                        'category_id' => $fk_category_id,
                         
                         'mrp_rate' => $mrp_rate,
                         'buying_rate' => $buying_rate,  
@@ -1333,7 +1335,9 @@ class MasterCtrl extends CI_Controller {
                         'selling_rate' => $selling_rate,  
                         'profit_margin' => $profit_margin,  
                         'admin_profile' => $admin_profile,  
-                        'user_profit' => $user_profit,  
+                        'user_profit' => $user_profit,
+                        'productImg' => $p_thumbnail, 
+                        'brand_name' => $brand_name, 
                         );
                     
                     $orderItemResult = $this->db->insert('order_items', $order_item_data);
@@ -1385,7 +1389,7 @@ class MasterCtrl extends CI_Controller {
         $orders = $this->MasterMdl->view_orders_details_v2($where);
         $data['order_items'] = $orders;
 
-        //print_r($data['order_items']);
+        //print_r($data);
         //$data['row_img'] = $this->MasterMdl->get_adimg($id);     
         //print_r($data['row']);exit;
         $this->load->view('master/edit_order', $data);
@@ -1581,7 +1585,7 @@ class MasterCtrl extends CI_Controller {
                     $fk_shop_id = $inventoryResult[0]["fk_shop_id"];
                     $fk_zone_id = $inventoryResult[0]["fk_zone_id"];
                     $fk_category_id = $inventoryResult[0]["fk_category_id"];
-        
+
                     $mrp_rate = $inventoryResult[0]["p_market_amount"];
                     $buying_rate = $inventoryResult[0]["p_buying_amount"];
                     $discount_rate = $inventoryResult[0]["discount_rate"];
@@ -1589,7 +1593,8 @@ class MasterCtrl extends CI_Controller {
                     $profit_margin = $inventoryResult[0]["profile_margin"];
                     $admin_profile = $inventoryResult[0]["p_admin_profit"];
                     $user_profit = $inventoryResult[0]["p_user_profit"];
-	
+                    $p_thumbnail = $inventoryResult[0]["p_thumbnail"];
+                    $brand_name = $inventoryResult[0]["brand_name"];
                     // order items total amount
                     $item_total_amount = $userQuantity * $p_amount;
                     
@@ -1604,15 +1609,17 @@ class MasterCtrl extends CI_Controller {
                         'order_id' => $order_id,
                         'zone_id' => $fk_zone_id,
                         'shop_id' => $fk_shop_id,
-                        'category_id' => $fk_category_id, 
-                        
+                        'category_id' => $fk_category_id,
+
                         'mrp_rate' => $mrp_rate,
                         'buying_rate' => $buying_rate,  
                         'discount_rate' => $discount_rate,  
                         'selling_rate' => $selling_rate,  
                         'profit_margin' => $profit_margin,  
                         'admin_profile' => $admin_profile,  
-                        'user_profit' => $user_profit,  
+                        'user_profit' => $user_profit,
+                        'productImg' => $p_thumbnail, 
+                        'brand_name' => $brand_name, 
                         );
                     
                     $orderItemResult = $this->db->insert('order_items', $order_item_data);
@@ -1641,8 +1648,7 @@ class MasterCtrl extends CI_Controller {
         $where = array('p_delete'=> '1');
         $brandNames = $this->MasterMdl->getAllBrands($where);
         $data['brandNames'] = $brandNames;
-        //print_r($data);
-
+        
         $where = array('key'=>'delivery', 'delete'=>'1');
         $order_delivery_charge_amount = floatval($this->MasterMdl->view_data('extras_content', $where)[0]['amount']);
         $where = array('key'=>'delivery_thresold', 'delete'=>'1');
@@ -1651,6 +1657,7 @@ class MasterCtrl extends CI_Controller {
         $data['delivery_charge'] = $order_delivery_charge_amount;
         $data['delivery_thresold'] = $delivery_thresold;
 
+        //print_r($data);
         $this->load->view('master/add_order', $data);
     }
 

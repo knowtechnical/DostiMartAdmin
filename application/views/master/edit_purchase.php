@@ -77,8 +77,8 @@ if (isset($purchaseResults["bill_date"]))
                                 </div>
                             </div>
                         </div>
-
-                        <div class="form-group-inner">
+                        
+                         <div class="form-group-inner">
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                     <label class="login2 pull-right pull-right-pro" for="purchase_total">Purchase Total</label>
@@ -90,7 +90,7 @@ if (isset($purchaseResults["bill_date"]))
                               
                             </div>
                         </div>
-
+                        
                         <hr>
                         <div class="form-group-inner">
                             <div class="row">
@@ -446,7 +446,7 @@ function onAddProduct() {
                                     '<td><input type="text" class="quantity" name="discount_rate'+counter+'" id="discount_rate'+counter+'" value="'+myObj.data[j].discount_rate+'" onkeyup="return onUpdateItem('+counter+');" /></td> '+
                                     '<td><input type="text" class="quantity" name="selling_price'+counter+'" id="selling_price'+counter+'" value="'+myObj.data[j].price+'"  /></td> '+
                                     '<td><input type="text" class="quantity" name="profit_margin'+counter+'" id="profit_margin'+counter+'" value="'+myObj.data[j].profile_margin+'" /></td> '+
-                                    '<td><input type="text" class="quantity" name="purchase_qty'+counter+'" id="purchase_qty'+counter+'" value="'+add_quantity+'" onkeyup="return calculatePurchaseTotal();"  /></td> '+
+                                    '<td><input type="text" class="quantity" name="purchase_qty'+counter+'" id="purchase_qty'+counter+'" value="'+add_quantity+'"  onkeyup="return calculatePurchaseTotal();" /></td> '+
                                     '<td><input type="text" class="quantity" name="stock_quantity'+counter+'"  id="quantity'+counter+'" value="'+jsonObj.data[j].p_quantity+'" disabled /></td> '+
                                     '<td><button class="btn btn-danger" name="remove'+counter+'" id="reomve'+counter+'" onclick="return onDeleteItem('+counter+')" >Delete</button>'+
                                     '<input type="hidden" value="'+jsonObj.data[j].p_id+'" name="added_product'+counter+'" id="added_product'+counter+'" />'+
@@ -477,7 +477,6 @@ function onDeleteItem(index){
         $('#active'+index).val('deleted');
         $('#row'+index).remove();
         actual_count = actual_count - 1;
-
         calculatePurchaseTotal();
   }
   return conf;
@@ -565,7 +564,6 @@ $(document).ready(function() {
             }
     });
 
-   
     //   $("#product_div div input").focus(function(){
     //     $("#product_div div input").val('');
     //   });

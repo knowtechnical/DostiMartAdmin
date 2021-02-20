@@ -371,7 +371,7 @@ class MasterMdl extends CI_Model {
 
     public function get_order($id){
         $this->db->select('*');
-        $this->db->from('orders s'); 
+        $this->db->from('orders s');
         $this->db->where('id',$id);             
         $result = $this->db->get()->result_array();        
         if (!empty($result)) {
@@ -703,8 +703,8 @@ class MasterMdl extends CI_Model {
         $this->db->select('o.*,i.*, o.order_number as ordernumber, o.customer_name as l_name, o.customer_mobile as l_mobile, o.customer_address as l_address');
         $this->db->from('orders o'); 
         $this->db->join('order_items i', 'i.order_id = o.id');
-        $this->db->where($where);  
-        $this->db->order_by('i.shop_id', 'ASC');    
+        $this->db->where($where);
+        $this->db->order_by('i.shop_id', 'ASC');
         $result = $this->db->get()->result_array();     
         return $result;
     }
@@ -800,7 +800,7 @@ class MasterMdl extends CI_Model {
 	public function send_push_notification($token_id,$title,$msg){
 							// API access key from Google API's Console
 				//define( 'API_ACCESS_KEY', 'AAAAFsI2Bao:APA91bEdwRXOAStM2a0qIcvVF3Q_8NzVP8ZH3E_mgw2JcEyt3cuWHM6S6DPneGfJ6BJzDR2DqFeG9v7fN6zlkp5uYr98gl_Sdrio7EJKUy56oWIaCQQsAV0MkmutChiZMzeoPlvFCUpq' );
-				$API_ACCESS_KEY = 'AAAACKGZ1J0:APA91bGWBYlaXveaspMTAKGoesyGLddMZUfp_BGxnCEwGOC21vmRSpPv9NkN3O8Vcr5O_Z91Ve-wSS_1q2J4329KI2GHEffNJ_5DXlWegDTQCFaonYYetcbYPJnGB8MoG9do9PdoPvvc';
+				$API_ACCESS_KEY = 'AAAAFsI2Bao:APA91bEdwRXOAStM2a0qIcvVF3Q_8NzVP8ZH3E_mgw2JcEyt3cuWHM6S6DPneGfJ6BJzDR2DqFeG9v7fN6zlkp5uYr98gl_Sdrio7EJKUy56oWIaCQQsAV0MkmutChiZMzeoPlvFCUpq';
 				$registrationIds = $token_id;
 
 				// prep the bundle

@@ -147,8 +147,8 @@
 								<li><a title="Dashboard v.2" href="<?php echo site_url(); ?>/view_pushnotification"><span class="mini-sub-pro">Send Notifications</span></a></li>   
                             <?php } ?>
                             <?php if($_SESSION['all']['l_role'] == 'superadmin' || $_SESSION['all']['l_role'] == 'admin' || $_SESSION['all']['l_role'] == 'vendor' ){?>
-                                <li><a title="Dashboard v.2" href="<?php echo site_url(); ?>/view_product"><span class="mini-sub-pro">View Product</span></a></li>
-                                <li><a title="Dashboard v.2" href="<?php echo site_url(); ?>/view_purchase"><span class="mini-sub-pro">View Purchase</span></a></li>
+                            <li><a title="Dashboard v.2" href="<?php echo site_url(); ?>/view_product"><span class="mini-sub-pro">View Product</span></a></li>
+                            <li><a title="Dashboard v.2" href="<?php echo site_url(); ?>/view_purchase"><span class="mini-sub-pro">View Purchase</span></a></li>
                             <?php } ?>
                             <?php if($_SESSION['all']['l_role'] == 'delivery_person' ){?>
                             <li><a title="Dashboard v.2" href="<?php echo site_url(); ?>/view_orders_dperson"><span class="mini-sub-pro">View Orders</span></a></li>

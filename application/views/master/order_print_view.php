@@ -15,45 +15,34 @@
                             <p style="margin:0px;">+91-9422917079</p>
                         </p>
                         </center>
-                        <h1>Order Details</h1>
-                   
                         <table class="table table-bordered" >
                             <tbody>
-          
-                            <tr>
-                                <td><strong>Order Date</strong></td>
-                                <td><?php if (isset($result[0]['o_date'])) echo $result[0]['o_date'] ?></td>
-                                 
-                            </tr>
-                            <tr>
-                                <td><strong>Order ID</strong></td>
-                                <td><?php if (isset($result[0]['order_number'])) echo $result[0]['order_number'] ?></td>
-                                 
-                            </tr>
-                            <tr>
-                                <td><strong>Delivery Mode</strong></td>
-                                <td><?php if (isset($result[0]['delivery_mode'])) echo $result[0]['delivery_mode'] ?></td>
-                                 
-                            </tr>
-                            <tr>
-                                <td><strong>Customer Name</strong></td>
-                                <td><?php if (isset($result[0]['l_name'])) echo $result[0]['l_name'] ?></td>    
-                            </tr>
-                            <tr>
-                                <td><strong>Customer Mobile</strong></td>
-                                <td><?php if (isset($result[0]['customer_mobile'])) echo $result[0]['customer_mobile'] ?></td>    
-                            </tr>
-                            <tr>
-                                <td><strong>Customer Address</strong></td>
-                                <td><?php if (isset($result[0]['house_no'])) 
-                                                echo $result[0]['house_no']." ".$result[0]['street_address'].", ".$result[0]['apartment_name'].", ".$result[0]['landmark'].", ".$result[0]['pincode'].", ".$result[0]['city']
-                                    ?>                
-                                </td>    
-                            </tr>
-                                        
-                            
-                            </tbody>
-                         </table>
+                                <tr>
+                                    <td><strong>Order Date</strong></td>
+                                    <td><?php if (isset($result[0]['o_date'])) echo $result[0]['o_date'] ?></td>
+                                    
+                                    <td><strong>Order ID</strong></td>
+                                    <td><?php if (isset($result[0]['order_number'])) echo $result[0]['order_number'] ?></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Delivery Mode</strong></td>
+                                    <td><?php if (isset($result[0]['delivery_mode'])) echo $result[0]['delivery_mode'] ?></td>
+                                    
+                                    <td><strong>Customer Name</strong></td>
+                                    <td><?php if (isset($result[0]['l_name'])) echo $result[0]['l_name'] ?></td>    
+                                </tr>
+                                <tr>
+                                    <td><strong>Customer Mobile</strong></td>
+                                    <td><?php if (isset($result[0]['customer_mobile'])) echo $result[0]['customer_mobile'] ?></td>
+
+                                    <td><strong>Customer Address</strong></td>
+                                    <td><?php if (isset($result[0]['house_no'])) 
+                                                    echo $result[0]['house_no']." ".$result[0]['street_address'].", ".$result[0]['apartment_name'].", ".$result[0]['landmark'].", ".$result[0]['pincode'].", ".$result[0]['city']
+                                        ?>                
+                                    </td>   
+                                </tr>
+                            </tbody>    
+                        </table>
 
                         <h1>Product Items</h1>
 
@@ -98,17 +87,27 @@
                                     <td colspan=6>Total Amount</td>
                                     <td><?php if (isset($result[0]['order_items_total_amount'])) echo $result[0]['order_items_total_amount'] ?></td>
                                 </tr>
+                                <?php if(isset($result[0]['delivery_mode']) && $result[0]['delivery_mode'] == 'PickUp'){ ?>
                                 <tr>
                                     <td colspan=6>PickUp Discount</td>
-                                    <td><?php if (isset($result[0]['pickup_discount_amount'])) echo number_format((float)$result[0]['pickup_discount_amount'], 2, '.', ''); ?></td>
+                                    <td>-<?php if (isset($result[0]['pickup_discount_amount'])) echo number_format((float)$result[0]['pickup_discount_amount'], 2, '.', ''); ?></td>
                                 </tr>
+                                <?php } ?>
                                 <tr>
                                     <td colspan=6>Delivery Charges</td>
                                     <td><?php if (isset($result[0]['order_delivery_charge_amount'])) echo number_format((float)$result[0]['order_delivery_charge_amount'], 2, '.', ''); ?></td>
                                 </tr>
                                 <tr>
                                         <td colspan=6><strong>Amount Payable</strong></td>
-                                        <td><strong><?php if (isset($result[0]['order_total_amount'])) echo number_format((float)$result[0]['order_total_amount'], 2, '.', ''); ?></strong></td>
+                                        <td><strong><?php if (isset($result[0]['order_total_amount'])) echo round($result[0]['order_total_amount']); ?></strong></td>
+                                </tr>
+                                 <tr>
+                                        <td colspan=7>
+                                        <span style='font-family:"Comic Sans MS", cursive, sans-serif'>
+                                            You have saved
+                                            <?php if (isset($result[0]['order_savings_amount'])) echo number_format((float)$result[0]['order_savings_amount'], 2, '.', ''); ?>
+                                        </span>
+                                       </td>
                                 </tr>
                             </tbody>
                          </table>

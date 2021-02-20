@@ -33,10 +33,12 @@
                 <tr>
                     <th data-field="state" data-checkbox="true"></th>
                     <th>Sr No</th>
+                    <th>Product ID</th>
                     <th data-sortable="true" data-field="category">Category</th>
                     <th data-sortable="true" data-field="sub_category">Sub-Category</th>
                     <th data-sortable="true" data-field="name">Name</th>
                     <th data-sortable="true" data-field="mrp">MRP</th>
+                    <th data-sortable="true" data-field="buying_price">Buying Price</th>
                     <th data-sortable="true" data-field="selling_price">Selling Price</th>
                     <th data-sortable="true" data-field="quantity">Quantity</th>
                     <th data-sortable="true" data-field="discount_rate">Discount Rate(%)</th>
@@ -55,10 +57,12 @@
                 <tr id="delete<?= $value['p_id']; ?>">
                     <td></td>
                     <td><?=  $count ?></td>
+                    <td><?=  $value['p_id'] ?></td>
                     <td> <?=  $value['c_name']; ?></td>
                     <td> <?=  $value['s_name']; ?></td>
                     <td>  <?= " ".$value['p_name']." (".$value['brand_name'].") - ".$value['p_quantity_description']; ?></td>  
-                    <td> <?=  $value['p_market_amount']; ?></td>                                              
+                    <td> <?=  $value['p_market_amount']; ?></td>  
+                     <td> <?=  $value['p_buying_amount']; ?></td>  
                     <td> <?=  $value['p_amount']; ?></td>
                      <?php  
                             if($value['p_quantity'] <= 2) {
@@ -73,7 +77,7 @@
                     <a href="<?= site_url(); ?>/view_product_details/<?= $value['p_id']; ?>">
                         <button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit"><i class="fa fa-info-circle" aria-hidden="true"></i>
                     </button>
-                    <?php if($_SESSION['all']['l_role'] == 'superadmin'  ||  $_SESSION['all']['l_role'] == 'admin' || $_SESSION['all']['l_role'] == 'vendor'){?>     
+                     <?php if($_SESSION['all']['l_role'] == 'superadmin'  ||  $_SESSION['all']['l_role'] == 'admin' || $_SESSION['all']['l_role'] == 'vendor'){?>     
                         <a href="<?= site_url(); ?>/edit_product/<?= $value['p_id']; ?>">
                             <button data-toggle="tooltip" title="" class="pd-setting-ed" data-original-title="Edit">
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>

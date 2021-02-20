@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                         </div>
-
+                        
                         <div class="form-group-inner">
                             <div class="row">
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
@@ -78,7 +78,7 @@
                               
                             </div>
                         </div>
-
+                        
                         <hr>
                         <div class="form-group-inner">
                             <div class="row">
@@ -87,7 +87,7 @@
                                 </div>
 
                                 <!-- Brand List -->
-                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="display:none;">
+                                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12"  style="display:none;">
                                     <select id="brand_show" name="brand_show" class="form-control text-input" onchange="return onBrand(this.value);">
                                         <option value=''>Select All</option>
                                         <?php  foreach ($brandNames as $item) { ?>
@@ -420,7 +420,7 @@ function onAddProduct() {
                                         '<td><input type="text" class="quantity" name="discount_rate'+counter+'" id="discount_rate'+counter+'" value="'+myObj.data[j].discount_rate+'" onkeyup="return onUpdateItem('+counter+');" /></td> '+
                                         '<td><input type="text" class="quantity" name="selling_price'+counter+'" id="selling_price'+counter+'" value="'+myObj.data[j].price+'"  /></td> '+
                                         '<td><input type="text" class="quantity" name="profit_margin'+counter+'" id="profit_margin'+counter+'" value="'+myObj.data[j].profile_margin+'" /></td> '+
-                                        '<td><input type="text" class="quantity" name="purchase_qty'+counter+'" id="purchase_qty'+counter+'" value="'+add_quantity+'" onkeyup="return calculatePurchaseTotal();" /></td> '+
+                                        '<td><input type="text" class="quantity" name="purchase_qty'+counter+'" id="purchase_qty'+counter+'" value="'+add_quantity+'"  onkeyup="return calculatePurchaseTotal();" /></td> '+
                                         '<td><input type="text" class="quantity" name="stock_quantity'+counter+'"  id="quantity'+counter+'" value="'+jsonObj.data[j].p_quantity+'" disabled /></td> '+
                                         '<td><button class="btn btn-danger" name="remove'+counter+'" id="reomve'+counter+'" onclick="return onDeleteItem('+counter+')" >Delete</button>'+
                                         '<input type="hidden" value="'+jsonObj.data[j].p_id+'" name="added_product'+counter+'" id="added_product'+counter+'" />'+
@@ -430,6 +430,7 @@ function onAddProduct() {
                 $('#add_row').append(tr);
                 $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />');
                 calculatePurchaseTotal();
+            
             }
         }
     
@@ -519,7 +520,7 @@ $(document).ready(function() {
                 html = '';
                 xyObj  = JSON.parse(data)
                 for (j = 0; j < xyObj.data.length; ++j) {
-                        product_name = xyObj.data[j].p_name + ' - '+xyObj.data[j].p_quantity_description+' - MRP: '+xyObj.data[j].p_market_amount;
+                        product_name = xyObj.data[j].p_name + ' - '+xyObj.data[j].p_quantity_description+' '+' ('+xyObj.data[j].brand_name+') '+'- MRP: '+xyObj.data[j].p_market_amount;
                         html = html + '<option value="'+xyObj.data[j].p_id+'"> '+product_name+' </option>';
                 }
 

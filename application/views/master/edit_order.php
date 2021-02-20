@@ -94,8 +94,8 @@
                                 <div class="form-group-inner">
 									<div class="row">
 										<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-
-											<table class="table table-bordered">
+                                            
+                                            <table class="table table-bordered">
 												<?php $count = 0; if(isset($order_items)){
                                                           $exist_count = 1;
                                                           foreach ($order_items as $value) {
@@ -303,7 +303,6 @@ var countries = [];
 var delivery_thresold = <?php echo $delivery_thresold; ?>;
 var delivery_charge = <?php echo $delivery_charge; ?>;
 
-
 function onUpdateItemQty(value, index, unitPrice){
     var subTotal = parseFloat(unitPrice)*value;
 
@@ -356,6 +355,7 @@ function onAddProduct() {
                                     '</td></tr>');
             $('#add_row').append('<input type="hidden" value="active" name="active'+counter+'" id="active'+counter+'" />')
             calculateTotal();
+        
         }
     }
   
@@ -479,7 +479,7 @@ $(document).ready(function() {
       $("#product_div div input").focus(function(){
         $("#product_div div input").val('');
       });
-
+      
       calculateTotal();
       $.ajax({
             type: "post",

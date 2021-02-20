@@ -39,26 +39,16 @@ class ApiCtrl extends CI_Controller {
         exit;	
     }
 
-    function api_updateOrderDetails(){
-        $response = array();
-        $order_id = $this->input->post('order_id');
-        $notes = $this->input->post('notes');
-
-        $where = array('id'=> $order_id);
-        $data = array('notes'=> $notes);
-        $supplier_results = $this->ApiMdl->update_table($where, $data, "orders");
-        $response['success'] = "success";
-
-        print_r(json_encode($response));
-        exit;
-    }
-
     public function api_fetchProductsByBrandName() { //http://localhost/mezban/index.php/api_fetchProductsByBrandName
         $response = array();
         $product_name = $this->input->post('brand_name');
         if(isset($product_name)) {
 
-            $query = $this->db->query("select p_id, p_thumbnail, brand_name, p_quantity,p_admin_profit, p_user_profit,  p_market_amount, discount_rate, profile_margin, p_buying_amount,  p_quantity_description, p_name, p_amount as price, ceiling((p_user_profit/p_market_amount)*100) as save_percent
+            $search = array("\\",  "\x00", "\n",  "\r",  "'",  '"', "\x1a");
+            $replace = array("\\\\","\\0","\\n", "\\r", "\'", '\"', "\\Z");
+    
+            $product_name =  str_replace($search, $replace, $product_name);
+            $query = $this->db->query("select p_id, brand_name, p_thumbnail, p_market_amount, p_quantity_description, p_name, p_amount as price, ceiling((p_user_profit/p_market_amount)*100) as save_percent
             from 
             product
             where ( brand_name='$product_name') and p_delete=1 ");
@@ -97,6 +87,20 @@ class ApiCtrl extends CI_Controller {
         $response['contact_no'] = $supplier_results[0]["contact_no"];
         $response['address'] = $supplier_results[0]["address"];
         $response['gst_in'] = $supplier_results[0]["gst_in"];
+
+        print_r(json_encode($response));
+        exit;
+    }
+
+    function api_updateOrderDetails(){
+        $response = array();
+        $order_id = $this->input->post('order_id');
+        $notes = $this->input->post('notes');
+
+        $where = array('id'=> $order_id);
+        $data = array('notes'=> $notes);
+        $supplier_results = $this->ApiMdl->update_table($where, $data, "orders");
+        $response['success'] = "success";
 
         print_r(json_encode($response));
         exit;
